@@ -26,6 +26,7 @@ struct ProductsView: View {
         NavigationView {
             VStack {
                 if isSearching {
+                    
                     if searchText.isEmpty {
                         // Show search history when no text is entered
                         List {
