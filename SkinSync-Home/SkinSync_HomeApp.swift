@@ -11,7 +11,7 @@ import SwiftUI
 struct SkinSync_HomeApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            OnboardingView()
         }
     }
 }

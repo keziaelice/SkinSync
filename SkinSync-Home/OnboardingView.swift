@@ -6,26 +6,23 @@ struct OnboardingView: View {
     @State private var age: Int = 18
     @State private var selectedGender: String = ""
     
-    let genders = ["Male", "Female", "Non-Binary"]
+    let genders = ["Male", "Female"]
 
     var body: some View {
         VStack {
-            // Timeline / Progress Bar
             ProgressView(currentPage: currentPage)
                 .padding()
 
             Spacer()
-            
-            // Page Content
+             
             TabView(selection: $currentPage) {
-                // Page 1: Username
                 VStack {
-                    Text("Hai, kami BASE! Kalau kamu?")
+                    Text("Tell us your name")
                         .font(.title2)
                         .fontWeight(.bold)
                         .padding()
                     
-                    TextField("Masukkan Username", text: $username)
+                    TextField("Enter username", text: $username)
                         .padding()
                         .background(Color.gray.opacity(0.2))
                         .cornerRadius(10)
@@ -33,28 +30,27 @@ struct OnboardingView: View {
                     
                     Spacer()
                     
-                    Button("Lanjut") {
+                    Button("Next") {
                         withAnimation {
                             currentPage = 2
                         }
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.red)
+                    .background(Color(red: 161/255, green: 170/255, blue: 123/255))
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .padding(.horizontal, 30)
                 }
                 .tag(1)
                 
-                // Page 2: Age
                 VStack {
-                    Text("Berapa umur kamu?")
+                    Text("What's your age?")
                         .font(.title2)
                         .fontWeight(.bold)
                         .padding()
 
-                    Picker("Pilih Umur", selection: $age) {
+                    Picker("Select your age", selection: $age) {
                         ForEach(0..<100) { age in
                             Text("\(age)").tag(age)
                         }
@@ -66,23 +62,22 @@ struct OnboardingView: View {
 
                     Spacer()
 
-                    Button("Lanjut") {
+                    Button("Next") {
                         withAnimation {
                             currentPage = 3
                         }
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.red)
+                    .background(Color(red: 161/255, green: 170/255, blue: 123/255))
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .padding(.horizontal, 30)
                 }
                 .tag(2)
                 
-                // Page 3: Gender
                 VStack {
-                    Text("Pilih Gender Kamu")
+                    Text("What's your gender?")
                         .font(.title2)
                         .fontWeight(.bold)
                         .padding()
@@ -93,16 +88,17 @@ struct OnboardingView: View {
                                 selectedGender = gender
                             }) {
                                 VStack {
-                                    Image(systemName: genderSymbol(for: gender))
+                                    Image(genderIcon(for: gender, isSelected: selectedGender == gender))
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(width: 50, height: 50)
+                                        .frame(width: 100, height: 100)
                                         .padding()
-                                        .background(selectedGender == gender ? Color.blue : Color.gray.opacity(0.2))
+                                        .background(selectedGender == gender ? genderColor(for: gender) : Color.gray.opacity(0.2))
                                         .clipShape(Circle())
                                     
                                     Text(gender)
-                                        .font(.caption)
+                                        .font(.title2)
+                                        .foregroundColor(.black)
                                 }
                             }
                         }
@@ -115,7 +111,7 @@ struct OnboardingView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.red)
+                    .background(Color(red: 161/255, green: 170/255, blue: 123/255))
                     .foregroundColor(.white)
                     .cornerRadius(10)
                     .padding(.horizontal, 30)
@@ -128,16 +124,25 @@ struct OnboardingView: View {
         }
     }
 
-    func genderSymbol(for gender: String) -> String {
+    func genderIcon(for gender: String, isSelected: Bool) -> String {
         switch gender {
         case "Male":
-            return "person.fill"
+            return isSelected ? "male-selected" : "male-unselected"
         case "Female":
-            return "person.fill.badge.plus"
-        case "Non-Binary":
-            return "questionmark.circle"
+            return isSelected ? "female-selected" : "female-unselected"
         default:
-            return "person"
+            return "questionmark.circle"
+        }
+    }
+
+    func genderColor(for gender: String) -> Color {
+        switch gender {
+        case "Male":
+            return Color(red: 0.5882, green: 0.7529, blue: 1.0)
+        case "Female":
+            return Color(red: 0.9922, green: 0.6863, blue: 0.6863)
+        default:
+            return Color.gray.opacity(0.2)
         }
     }
 }
@@ -149,7 +154,7 @@ struct ProgressView: View {
         HStack {
             ForEach(1...3, id: \.self) { step in
                 Rectangle()
-                    .fill(step <= currentPage ? Color.red : Color.gray.opacity(0.3))
+                    .fill(step <= currentPage ? Color(red: 161/255, green: 170/255, blue: 123/255) : Color.gray.opacity(0.3))
                     .frame(height: 5)
             }
         }
@@ -162,4 +167,3 @@ struct OnboardingView_Previews: PreviewProvider {
         OnboardingView()
     }
 }
-

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var username = ""
     @State private var selectedTab = 0 // Track selected tab index
     
     init() {

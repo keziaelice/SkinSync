@@ -9,8 +9,6 @@ import SwiftUI
 
 struct VerificationView: View {
     @State private var username: String = ""
-    @State private var firstname: String = ""
-    @State private var lastname: String = ""
     @State private var year: String = ""
     @State private var month: String = ""
     @State private var day: String = ""
@@ -83,45 +81,6 @@ struct VerificationView: View {
                             .frame(height: 35)
                             .padding(.top, -103)
                         
-                        Text("First Name")
-                            .fontWeight(.bold)
-                            .foregroundColor(Color(red: 115/255, green: 121/255, blue: 100/255))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 40)
-                            .font(.system(size: 15))
-                            .padding(.top, -85)
-                        
-                        TextField("First Name", text: $firstname)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 14)
-                            .background(Color.gray.opacity(0.2))
-                            .foregroundColor(.black)
-                            .cornerRadius(22)
-                            .font(.system(size: 15))
-                            .padding(.leading, 35)
-                            .padding(.trailing, 35)
-                            .frame(height: 35)
-                            .padding(.top, -88)
-                        
-                        Text("Last Name")
-                            .fontWeight(.bold)
-                            .foregroundColor(Color(red: 115/255, green: 121/255, blue: 100/255))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 40)
-                            .font(.system(size: 15))
-                            .padding(.top, -70)
-                        
-                        TextField("Last Name", text: $lastname)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 14)
-                            .background(Color.gray.opacity(0.2))
-                            .foregroundColor(.black)
-                            .cornerRadius(22)
-                            .font(.system(size: 15))
-                            .padding(.leading, 35)
-                            .padding(.trailing, 35)
-                            .frame(height: 35)
-                            .padding(.top, -73)
                         
                         Text("Date of Birth")
                             .fontWeight(.bold)
