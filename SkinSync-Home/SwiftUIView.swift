@@ -6,14 +6,14 @@ struct CustomTabView: View {
     var body: some View {
         ZStack {
             Group {
-                                if selectedTab == 0 {
-//                                    HomeView()
-                                } else if selectedTab == 1 {
+                if selectedTab == 0 {
+                    ScheduleView()
+                } else if selectedTab == 1 {
 //                                    SearchView()
-                                } else if selectedTab == 2 {
-                                    ContentView()
-                                }
-                            }
+                } else if selectedTab == 2 {
+                    ContentView()
+                }
+            }
             VStack {
                 // Main Content View based on selected tab
                 Spacer()
