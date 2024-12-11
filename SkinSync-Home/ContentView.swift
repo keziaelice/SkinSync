@@ -67,10 +67,48 @@ struct ContentView: View {
                 .padding()
                 .background(Color(red: 161/255, green: 170/255, blue: 123/255)) // Green color for the tab bar
                 .cornerRadius(25, corners: [.topLeft, .topRight]) // Rounded corners at the top
-                .padding(.bottom, -32) // Remove extra space below the tab bar
                 .ignoresSafeArea(edges: .bottom) // Extend to the bottom edge to fill the space
             }
+            .padding(.top, 10)
+            .padding(.bottom, -34) // Remove extra space below the tab bar
         }
+    }
+}
+
+struct CustomTabBarButton: View {
+    var icon: String
+    var filledIcon: String
+    var selected: Bool
+    
+    var body: some View {
+        VStack {
+            Image(systemName: selected ? filledIcon : icon) // Switch between filled and regular icon
+                .font(.system(size: 24))
+                .foregroundColor(selected ? Color(red: 40/255, green: 51/255, blue:22/255) : Color(red: 40/255, green: 51/255, blue:22/255)) // Use custom color for selection
+            
+            Text(icon == "house" ? "Home" : icon == "calendar" ? "Schedule" : icon == "face.smiling" ? "Analyze" : "Profile")
+                .font(.caption)
+                .foregroundColor(selected ? Color(red: 40/255, green: 51/255, blue:22/255) : Color(red: 40/255, green: 51/255, blue:22/255)) // Use custom color for selection
+                .padding(.bottom, 10)
+        }
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat
+    var corners: UIRectCorner
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect,
+                                byRoundingCorners: corners,
+                                cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
     }
 }
 

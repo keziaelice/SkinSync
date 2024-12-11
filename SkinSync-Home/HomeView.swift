@@ -193,42 +193,6 @@ struct HomeView: View {
     }
 }
 
-struct CustomTabBarButton: View {
-    var icon: String
-    var filledIcon: String
-    var selected: Bool
-    
-    var body: some View {
-        VStack {
-            Image(systemName: selected ? filledIcon : icon) // Switch between filled and regular icon
-                .font(.system(size: 24))
-                .foregroundColor(selected ? Color(red: 40/255, green: 51/255, blue:22/255) : Color(red: 40/255, green: 51/255, blue:22/255)) // Use custom color for selection
-            
-            Text(icon == "house" ? "Home" : icon == "calendar" ? "Schedule" : icon == "face.smiling" ? "Analyze" : "Profile")
-                .font(.caption)
-                .foregroundColor(selected ? Color(red: 40/255, green: 51/255, blue:22/255) : Color(red: 40/255, green: 51/255, blue:22/255)) // Use custom color for selection
-        }
-    }
-}
-
-struct RoundedCorner: Shape {
-    var radius: CGFloat
-    var corners: UIRectCorner
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect,
-                                byRoundingCorners: corners,
-                                cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
-    }
-}
-
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
 #Preview {
     HomeView()
 }
