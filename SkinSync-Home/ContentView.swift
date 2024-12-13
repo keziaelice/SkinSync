@@ -24,6 +24,9 @@ struct ContentView: View {
                 if (true) {
                     
                 }
+                if (true) {
+                    
+                }
                 
                 if selectedTab == 0 {
                     HomeView()
