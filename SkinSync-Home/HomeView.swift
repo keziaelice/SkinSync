@@ -21,175 +21,186 @@ struct HomeView: View {
     }
     
     var body: some View {
-        ZStack {
+        NavigationView {
+            ZStack {
                 Color(red: 255/255, green: 250/255, blue: 246/255)
                     .ignoresSafeArea()
-            
+                
                 ScrollView {
-                VStack {
-                    // Hello, Bobby
-                    ZStack {
-                        VStack {
-                            Color(red: 161/255, green: 170/255, blue: 123/255)
-                                .ignoresSafeArea(edges: .top)
-                                .frame(height: 250)
-                                .cornerRadius(15)
-                                .padding(.top, -60)
-                        }
-                        VStack {
-                            Text("Hello, Bobby")
-                                .fontWeight(.bold)
-                                .font(.system(size: 22))
-                                .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.top, 20)
-                            Text("How's your face condition?")
-                                .font(.system(size: 16))
-                                .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.bottom, 20)
-                                .padding(.top, 0.1)
-                            HStack {
-                                Image(systemName: "magnifyingglass")
-                                    .foregroundColor(.gray)
-                                    .padding(.leading, 10)
-                                TextField("Search tips, products...", text: $searchText)
-                                    .font(.custom("Montserrat-Regular", size: 16))
-                                    .textInputAutocapitalization(.never)
-                                    .disableAutocorrection(true)
-                            }
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(20)
-                            .shadow(radius: 4)
-                        }
-                        .padding(30)
-                        .padding(.bottom, -70)
-                        .padding(.top, -100)
-                    }
-                    
-                    // Good Morning
-                    HStack {
+                    VStack {
+                        // Hello, Bobby
                         ZStack {
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("Good Morning")
-                                    .font(.system(size: 24, weight: .bold))
-                                    .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                                Text("Don't forget to use sunscreen and re-apply it every 3 hours")
-                                    .frame(maxWidth: 200, minHeight: 40)
-                                    .font(.system(size: 14))
-                                    .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                                Text("Start Skincare Routine")
-                                    .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
+                            VStack {
+                                Color.backgroundColorElement
+                                    .ignoresSafeArea(edges: .top)
+                                    .frame(height: 250)
+                                    .cornerRadius(15)
+                                    .padding(.top, -63)
+                            }
+                            VStack {
+                                Text("Hello, Bobby")
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 22))
+                                    .foregroundColor(Color.colorText)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.top, 20)
-                            }
-                            .padding(25)
-                            Spacer()
-                        }
-                        Image("Sun")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 100, height: 100)
-                            .offset(x: 0, y: 40)
-                    }
-                    .background(Color(red: 236/255, green: 234/255, blue: 222/255))
-                    .cornerRadius(20)
-                    .padding()
-                    .shadow(radius: 4)
-                    
-                    // Brands
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Brands")
-                            .font(.system(size: 20, weight: .bold))
-                            .padding(.leading)
-                            .padding(.bottom, -10)
-                            .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 16) {
-                                ForEach(0..<5, id: \.self) { _ in
-                                    Text("BRANDS")
+                                Text("How's your face condition?")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Color.colorText)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.bottom, 20)
+                                    .padding(.top, 0.1)
+                                HStack {
+                                    Image(systemName: "magnifyingglass")
+                                        .foregroundColor(.gray)
+                                        .padding(.leading, 10)
+                                    TextField("Search tips, products...", text: $searchText)
                                         .font(.custom("Montserrat-Regular", size: 16))
-                                        .frame(width: 100, height: 100)
-                                        .background(Color.white)
-                                        .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                                        .cornerRadius(10)
-                                        .shadow(radius: 4)
+                                        .textInputAutocapitalization(.never)
+                                        .disableAutocorrection(true)
                                 }
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(20)
+                                .shadow(radius: 4)
                             }
-                            .padding()
+                            .padding(30)
+                            .padding(.bottom, -70)
+                            .padding(.top, -100)
                         }
-                    }
-                    
-                    //                ZStack {
-                    //                    // Product
-                    //                    VStack(alignment: .leading, spacing: 10) {
-                    //                        Text("Product")
-                    //                            .font(.system(size: 20, weight: .bold))
-                    //                            .padding(.leading)
-                    //                            .padding(.bottom, -10)
-                    //                            .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                    //                        ScrollView(.horizontal, showsIndicators: false) {
-                    //                            HStack(spacing: 16) {
-                    //                                ForEach(0..<5, id: \.self) { _ in
-                    //                                    Text("PRODUCT")
-                    //                                        .font(.custom("Montserrat-Regular", size: 16))
-                    //                                        .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                    //                                        .frame(width: 150, height: 150)
-                    //                                        .background(Color.white)
-                    //                                        .cornerRadius(10)
-                    //                                        .shadow(radius: 4)
-                    //                                }
-                    //                            }
-                    //                            .padding()
-                    //                        }
-                    //                    }
-                    //                }
-                    // Product Section
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Product")
-                            .font(.system(size: 20, weight: .bold))
-                            .padding(.leading)
-                            .padding(.bottom, -10)
-                            .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 16) {
-                                ForEach(0..<5, id: \.self) { _ in
-                                    
-                                    Text("PRODUCT")
-                                        .font(.custom("Montserrat-Regular", size: 16))
-                                        .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                                        .frame(width: 150, height: 150)
-                                        .background(Color.white)
-                                        .cornerRadius(10)
-                                        .shadow(radius: 4)
-                                    
+                        
+                        // Good Morning
+                        HStack {
+                            ZStack {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Text("Good Morning")
+                                        .font(.system(size: 24, weight: .bold))
+                                        .foregroundColor(Color.colorText)
+                                    Text("Don't forget to use sunscreen and re-apply it every 3 hours")
+                                        .frame(maxWidth: 200, minHeight: 40)
+                                        .font(.system(size: 14))
+                                        .foregroundColor(Color.colorText)
+                                    Text("Start Skincare Routine")
+                                        .font(.system(size: 14, weight: .bold))
+                                        .foregroundColor(Color.colorText)
+                                        .padding(.top, 20)
                                 }
+                                .padding(25)
+                                Spacer()
                             }
-                            .padding()
+                            Image("Sun")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 100, height: 100)
+                                .offset(x: 0, y: 40)
                         }
-                    }
-                    
-                    // Search Results Section (Separate from Search Bar)
-                    if !filteredItems.isEmpty {
+                        .background(Color(red: 236/255, green: 234/255, blue: 222/255))
+                        .cornerRadius(20)
+                        .padding()
+                        .shadow(radius: 4)
+                        
+                        // Brands
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Search Results")
+                            Text("Brands")
                                 .font(.system(size: 20, weight: .bold))
                                 .padding(.leading)
-                                .padding(.top)
-                                .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
-                            List(filteredItems, id: \.self) { item in
-                                Text(item)
-                                    .foregroundColor(Color(red: 40/255, green: 51/255, blue:22/255))
+                                .padding(.bottom, -10)
+                                .foregroundColor(Color.colorText)
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 16) {
+                                    ForEach(0..<5, id: \.self) { _ in
+                                        Text("BRANDS")
+                                            .font(.custom("Montserrat-Regular", size: 16))
+                                            .frame(width: 100, height: 100)
+                                            .background(Color.white)
+                                            .foregroundColor(Color.colorText)
+                                            .cornerRadius(10)
+                                            .shadow(radius: 4)
+                                    }
+                                }
+                                .padding()
                             }
-                            .frame(height: 200) // Adjust list height
-                            .cornerRadius(10)
-                            .padding(.horizontal)
+                        }
+                        
+                        //                ZStack {
+                        //                    // Product
+                        //                    VStack(alignment: .leading, spacing: 10) {
+                        //                        Text("Product")
+                        //                            .font(.system(size: 20, weight: .bold))
+                        //                            .padding(.leading)
+                        //                            .padding(.bottom, -10)
+                        //                            .foregroundColor(Color.colorText)
+                        //                        ScrollView(.horizontal, showsIndicators: false) {
+                        //                            HStack(spacing: 16) {
+                        //                                ForEach(0..<5, id: \.self) { _ in
+                        //                                    Text("PRODUCT")
+                        //                                        .font(.custom("Montserrat-Regular", size: 16))
+                        //                                        .foregroundColor(Color.colorText)
+                        //                                        .frame(width: 150, height: 150)
+                        //                                        .background(Color.white)
+                        //                                        .cornerRadius(10)
+                        //                                        .shadow(radius: 4)
+                        //                                }
+                        //                            }
+                        //                            .padding()
+                        //                        }
+                        //                    }
+                        //                }
+                        // Product Section
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Text("Products")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .padding(.leading)
+                                    .padding(.bottom, -10)
+                                    .foregroundColor(Color.colorText)
+                                Spacer()
+                                NavigationLink(destination: ProductsView()) {
+                                    Text("See All")
+                                        .foregroundColor(Color.colorText)
+                                        .padding(.trailing, 15)
+                                }
+                            }
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 16) {
+                                    ForEach(0..<5, id: \.self) { _ in
+                                        
+                                        Text("PRODUCT")
+                                            .font(.custom("Montserrat-Regular", size: 16))
+                                            .foregroundColor(Color.colorText)
+                                            .frame(width: 150, height: 150)
+                                            .background(Color.white)
+                                            .cornerRadius(10)
+                                            .shadow(radius: 4)
+                                        
+                                    }
+                                }
+                                .padding()
+                            }
+                        }
+                        
+                        // Search Results Section (Separate from Search Bar)
+                        if !filteredItems.isEmpty {
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Search Results")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .padding(.leading)
+                                    .padding(.top)
+                                    .foregroundColor(Color.colorText)
+                                List(filteredItems, id: \.self) { item in
+                                    Text(item)
+                                        .foregroundColor(Color.colorText)
+                                }
+                                .frame(height: 200) // Adjust list height
+                                .cornerRadius(10)
+                                .padding(.horizontal)
+                            }
                         }
                     }
                 }
             }
         }
+        .tint(Color.colorText)
     }
 }
 

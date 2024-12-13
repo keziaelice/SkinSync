@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ContentView: View {
     @State private var username = ""
@@ -13,7 +14,7 @@ struct ContentView: View {
     
     init() {
         // Customize the appearance of the tab bar
-        UITabBar.appearance().backgroundColor = UIColor(Color(red: 161/255, green: 170/255, blue: 123/255)) // Tab bar background color
+        UITabBar.appearance().backgroundColor = UIColor(Color.backgroundColorElement) // Tab bar background color
         UITabBar.appearance().tintColor = UIColor.red // Selected tab color
     }
     
@@ -65,7 +66,7 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding()
-                .background(Color(red: 161/255, green: 170/255, blue: 123/255)) // Green color for the tab bar
+                .background(Color.backgroundColorElement) // Green color for the tab bar
                 .cornerRadius(25, corners: [.topLeft, .topRight]) // Rounded corners at the top
                 .ignoresSafeArea(edges: .bottom) // Extend to the bottom edge to fill the space
             }

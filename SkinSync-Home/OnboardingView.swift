@@ -14,136 +14,140 @@ struct OnboardingView: View {
         if isOnboardingComplete {
             ContentView() // Navigasi langsung ke ContentView
         } else {
-            VStack {
-                ProgressView(currentPage: currentPage)
-                    .padding()
-
-                Spacer()
-
-                TabView(selection: $currentPage) {
-                    // Step 1: Input Username
-                    VStack {
-                        Text("Tell us your name")
-                            .font(.title2)
-                            .fontWeight(.bold)
+            ZStack {
+                Color(red: 255/255, green: 250/255, blue: 246/255)
+                    .ignoresSafeArea()
+                VStack {
+                    ProgressView(currentPage: currentPage)
+                        .padding()
+                    
+                    Spacer()
+                    
+                    TabView(selection: $currentPage) {
+                        // Step 1: Input Username
+                        VStack {
+                            Text("Tell us your name")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .padding()
+                            
+                            TextField("Enter username", text: $username)
+                                .padding()
+                                .background(Color.gray.opacity(0.2))
+                                .cornerRadius(10)
+                                .padding(.horizontal, 30)
+                                .textInputAutocapitalization(.never)
+                                .onChange(of: username) { _ in
+                                    saveProgress()
+                                }
+                            
+                            Spacer()
+                            
+                            Button("Next") {
+                                withAnimation {
+                                    currentPage = 2
+                                    saveProgress()
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
                             .padding()
-                        
-                        TextField("Enter username", text: $username)
-                            .padding()
-                            .background(Color.gray.opacity(0.2))
+                            .background(username.isEmpty ? Color.gray : Color(red: 161/255, green: 170/255, blue: 123/255))
+                            .foregroundColor(.white)
                             .cornerRadius(10)
                             .padding(.horizontal, 30)
-                            .textInputAutocapitalization(.never)
-                            .onChange(of: username) { _ in
-                                saveProgress()
-                            }
+                            .disabled(username.isEmpty) // Disable button jika username kosong
+                        }
+                        .tag(1)
                         
-                        Spacer()
-                        
-                        Button("Next") {
-                            withAnimation {
-                                currentPage = 2
+                        // Step 2: Select Age
+                        VStack {
+                            Text("What's your age?")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .padding()
+                            
+                            Picker("Select your age", selection: $age) {
+                                ForEach(0..<100) { age in
+                                    Text("\(age)").tag(age)
+                                }
+                            }
+                            .pickerStyle(WheelPickerStyle())
+                            .frame(height: 150)
+                            .clipped()
+                            .padding()
+                            .onChange(of: age) { _ in
                                 saveProgress()
                             }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(username.isEmpty ? Color.gray : Color(red: 161/255, green: 170/255, blue: 123/255))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .padding(.horizontal, 30)
-                        .disabled(username.isEmpty) // Disable button jika username kosong
-                    }
-                    .tag(1)
-                    
-                    // Step 2: Select Age
-                    VStack {
-                        Text("What's your age?")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .padding()
-
-                        Picker("Select your age", selection: $age) {
-                            ForEach(0..<100) { age in
-                                Text("\(age)").tag(age)
-                            }
-                        }
-                        .pickerStyle(WheelPickerStyle())
-                        .frame(height: 150)
-                        .clipped()
-                        .padding()
-                        .onChange(of: age) { _ in
-                            saveProgress()
-                        }
-
-                        Spacer()
-
-                        Button("Next") {
-                            withAnimation {
-                                currentPage = 3
-                                saveProgress()
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color(red: 161/255, green: 170/255, blue: 123/255))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .padding(.horizontal, 30)
-                    }
-                    .tag(2)
-                    
-                    // Step 3: Select Gender
-                    VStack {
-                        Text("What's your gender?")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .padding()
-
-                        HStack(spacing: 20) {
-                            ForEach(genders, id: \.self) { gender in
-                                Button(action: {
-                                    selectedGender = gender
+                            
+                            Spacer()
+                            
+                            Button("Next") {
+                                withAnimation {
+                                    currentPage = 3
                                     saveProgress()
-                                }) {
-                                    VStack {
-                                        Image(genderIcon(for: gender, isSelected: selectedGender == gender))
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 100, height: 100)
-                                            .padding()
-                                            .background(selectedGender == gender ? genderColor(for: gender) : Color.gray.opacity(0.2))
-                                            .clipShape(Circle())
-                                        
-                                        Text(gender)
-                                            .font(.title2)
-                                            .foregroundColor(.black)
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(red: 161/255, green: 170/255, blue: 123/255))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                            .padding(.horizontal, 30)
+                        }
+                        .tag(2)
+                        
+                        // Step 3: Select Gender
+                        VStack {
+                            Text("What's your gender?")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .padding()
+                            
+                            HStack(spacing: 20) {
+                                ForEach(genders, id: \.self) { gender in
+                                    Button(action: {
+                                        selectedGender = gender
+                                        saveProgress()
+                                    }) {
+                                        VStack {
+                                            Image(genderIcon(for: gender, isSelected: selectedGender == gender))
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 100, height: 100)
+                                                .padding()
+                                                .background(selectedGender == gender ? genderColor(for: gender) : Color.gray.opacity(0.2))
+                                                .clipShape(Circle())
+                                            
+                                            Text(gender)
+                                                .font(.title2)
+                                                .foregroundColor(.black)
+                                        }
                                     }
                                 }
                             }
+                            
+                            Spacer()
+                            
+                            Button("Let's Get Started") {
+                                // Simpan data dan tandai onboarding selesai
+                                print("Username: \(username), Age: \(age), Gender: \(selectedGender)")
+                                isOnboardingComplete = true
+                                UserDefaults.standard.set(true, forKey: "isOnboardingComplete")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(selectedGender.isEmpty ? Color.gray : Color(red: 161/255, green: 170/255, blue: 123/255))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                            .padding(.horizontal, 30)
+                            .disabled(selectedGender.isEmpty) // Disable button jika gender belum dipilih
                         }
-
-                        Spacer()
-
-                        Button("Let's Get Started") {
-                            // Simpan data dan tandai onboarding selesai
-                            print("Username: \(username), Age: \(age), Gender: \(selectedGender)")
-                            isOnboardingComplete = true
-                            UserDefaults.standard.set(true, forKey: "isOnboardingComplete")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(selectedGender.isEmpty ? Color.gray : Color(red: 161/255, green: 170/255, blue: 123/255))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .padding(.horizontal, 30)
-                        .disabled(selectedGender.isEmpty) // Disable button jika gender belum dipilih
+                        .tag(3)
                     }
-                    .tag(3)
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                    
+                    Spacer()
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                
-                Spacer()
             }
         }
     }
