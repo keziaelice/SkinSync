@@ -22,13 +22,15 @@ struct LoginView: View {
                     Image("logo app")
                         .resizable()
                         .frame(width: 330, height: 120)
+                        .padding(.top, -100)
                     
                     Text("Login to Your Account")
                         .fontWeight(.bold)
                         .foregroundColor(Color(red: 115/255, green: 121/255, blue: 100/255))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 40)
-                        .padding(.top, -15)
+                        .padding(.top, -10)
+                        .font(.system(size: 20))
                     
                     TextField("Username or email", text: $username)
                         .padding()
@@ -80,36 +82,36 @@ struct LoginView: View {
                             .padding(.trailing, 5)
                     }
                     .padding(.horizontal, 30)
+                  
+//                     Text("Or Login With")
+//                         .foregroundColor(.black)
+//                         .font(.system(size: 14))
+//                         .padding(.top, 30)
                     
-                    Text("Or Login With")
-                        .foregroundColor(.black)
-                        .font(.system(size: 14))
-                        .padding(.top, 30)
-                    
-                    Button(action: {
-                        print("Google login tapped")
-                    }) {
-                        ZStack {
-                            Circle()
-                                .fill(Color.white)
-                                .frame(width: 50, height: 50)
-                                .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5)
-                            Image("logo google")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 30, height: 30)
-                        }
-                    }.padding(.top, 20)
-                    
+//                     Button(action: {
+//                         print("Google login tapped")
+//                     }) {
+//                         ZStack {
+//                             Circle()
+//                                 .fill(Color.white)
+//                                 .frame(width: 50, height: 50)
+//                                 .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5)
+//                             Image("logo google")
+//                                 .resizable()
+//                                 .scaledToFit()
+//                                 .frame(width: 30, height: 30)
+//                         }
+//                     }.padding(.top, 20)
+                  
                     HStack {
                         Text("Don’t have an account?")
                             .foregroundColor(.black)
                             .font(.system(size: 16))
-                        NavigationLink(destination: SignUpView()) {
-                            Text("Sign Up")
-                                .foregroundColor(.black)
-                                .font(.system(size: 16))
-                        }
+                        //                        NavigationLink(destination: SignUpView()) {
+                        //                            Text("Sign Up")
+                        //                                .foregroundColor(.black)
+                        //                                .font(.system(size: 16))
+                        //                        }
                     }.padding(.top, 20)
                 }
                 .padding()

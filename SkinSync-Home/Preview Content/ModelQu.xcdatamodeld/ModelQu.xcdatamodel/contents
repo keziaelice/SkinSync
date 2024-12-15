@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="24B91" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="Entity" representedClassName="Entity" syncable="YES" codeGenerationType="class"/>
+    <entity name="Product" representedClassName="Product" syncable="YES" codeGenerationType="class">
+        <attribute name="attribute" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="attribute1" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="idProduct" optional="YES" attributeType="String"/>
+        <attribute name="namaProduct" optional="YES" attributeType="String"/>
+        <relationship name="hubunganManusiaDanManusai" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User2" inverseName="relationship" inverseEntity="User2"/>
+    </entity>
+    <entity name="User2" representedClassName="User2" syncable="YES" codeGenerationType="class">
+        <attribute name="idUser" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="nameUser" optional="YES" attributeType="String"/>
+        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Product" inverseName="hubunganManusiaDanManusai" inverseEntity="Product"/>
+    </entity>
+</model>
