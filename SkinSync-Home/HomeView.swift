@@ -220,7 +220,6 @@ struct HomeView: View {
 //        fatalError("Failed to create model container. ")
 //    }
     
-//    HomeView()
     
     HomeView(username: "Guest")
 }
