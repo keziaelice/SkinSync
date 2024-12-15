@@ -21,13 +21,6 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             Group {
-                if (true) {
-                    
-                }
-                if (true) {
-                    
-                }
-                
                 if selectedTab == 0 {
                     HomeView()
                 } else if selectedTab == 1 {

@@ -82,8 +82,27 @@ struct LoginView: View {
                             .padding(.trailing, 5)
                     }
                     .padding(.horizontal, 30)
+                  
+//                     Text("Or Login With")
+//                         .foregroundColor(.black)
+//                         .font(.system(size: 14))
+//                         .padding(.top, 30)
                     
-                    
+//                     Button(action: {
+//                         print("Google login tapped")
+//                     }) {
+//                         ZStack {
+//                             Circle()
+//                                 .fill(Color.white)
+//                                 .frame(width: 50, height: 50)
+//                                 .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 5)
+//                             Image("logo google")
+//                                 .resizable()
+//                                 .scaledToFit()
+//                                 .frame(width: 30, height: 30)
+//                         }
+//                     }.padding(.top, 20)
+                  
                     HStack {
                         Text("Don’t have an account?")
                             .foregroundColor(.black)
