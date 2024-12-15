@@ -12,6 +12,7 @@ struct SkinSync_HomeApp: App {
     var body: some Scene {
         WindowGroup {
             OnboardingView()
+                .modelContainer(for: [UserModel.self]) // Daftarkan model User untuk SwiftData
         }
     }
 }

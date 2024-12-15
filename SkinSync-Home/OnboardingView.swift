@@ -1,6 +1,10 @@
 import SwiftUI
+import SwiftData
 
 struct OnboardingView: View {
+    @Environment(\.modelContext) var modelContext // Inject model context from the environment
+    @Query var users: [UserModel] // Fetch UserModel objects from the SwiftData storage
+
     @State private var currentPage: Int = UserDefaults.standard.integer(forKey: "lastStep") == 0 ? 1 : UserDefaults.standard.integer(forKey: "lastStep")
     @State private var username: String = UserDefaults.standard.string(forKey: "username") ?? ""
     @State private var age: Int = UserDefaults.standard.integer(forKey: "age") == 0 ? 18 : UserDefaults.standard.integer(forKey: "age")
@@ -12,6 +16,16 @@ struct OnboardingView: View {
 
     var body: some View {
         if isOnboardingComplete {
+            
+//            ForEach(users) { user in
+//                VStack(alignment: .leading) {
+//                    Text("Username: \(user.username)")
+//                    Text("Age: \(user.age)")
+//                    Text("Gender: \(user.gender)")
+//                }
+//                .padding()
+//            }
+
             ContentView() // Navigasi langsung ke ContentView
         } else {
             ZStack {
@@ -131,8 +145,9 @@ struct OnboardingView: View {
                             Button("Let's Get Started") {
                                 // Simpan data dan tandai onboarding selesai
                                 print("Username: \(username), Age: \(age), Gender: \(selectedGender)")
-                                isOnboardingComplete = true
                                 UserDefaults.standard.set(true, forKey: "isOnboardingComplete")
+                                addUserData(_username: username, _age: age, _gender: selectedGender)
+                                isOnboardingComplete = true
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
@@ -179,6 +194,12 @@ struct OnboardingView: View {
         default:
             return Color.gray.opacity(0.2)
         }
+    }
+    
+    func addUserData(_username: String, _age: Int, _gender: String) {
+        let newUser = UserModel(username: _username, age: _age, gender: _gender)
+        
+        modelContext.insert(newUser)
     }
 }
 

@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
-import CoreData
+import SwiftData
 
 struct ContentView: View {
+    @Query var users: [UserModel] // Fetch UserModel from SwiftData
     @State private var username = ""
     @State private var selectedTab = 0 // Track selected tab index
     
@@ -22,7 +23,8 @@ struct ContentView: View {
         ZStack {
             Group {
                 if selectedTab == 0 {
-                    HomeView()
+//                    HomeView()
+                    HomeView(username: users.first?.username ?? "Guest") // Pass username to HomeView
                 } else if selectedTab == 1 {
                     ScheduleView()
                 } else if selectedTab == 2 {
@@ -114,5 +116,5 @@ extension View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(username: "Guest")
 }

@@ -6,8 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
+    let username: String // Accept username as a parameter
+    
+//    @Bindable var user: UserModel
     @State private var searchText: String = "" // Search text for filtering
     @State private var isSearching = false // Track whether the search overlay is showing
     private let items = ["SKINTIFIC All Day Light Sunscreen Mist SPF50 PA++++ Sunscreen 50ml/120ml", "SKINTIFIC - 5X Ceramide Serum Sunscreen SPF50 PA++++ 30ml", "Light Serum Sunscreen SPF50 PA ++++25 ml", "SKINTIFIC - 360 Crystal Massager Lifting Eye Cream 20ML", "SKINTIFIC 10% Niacinamide Brightening Serum 20ML", "SKINTIFIC 2% Salicylic Acid Anti Acne Serum 20ML", "SKINTIFIC 5X Ceramide Barrier Repair Moisturize Gel 30G"]
@@ -38,7 +42,7 @@ struct HomeView: View {
                                     .padding(.top, -63)
                             }
                             VStack {
-                                Text("Hello, Bobby")
+                                Text("Hello, \(username)")
                                     .fontWeight(.bold)
                                     .font(.system(size: 22))
                                     .foregroundColor(Color.colorText)
@@ -205,5 +209,17 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+//    do {
+//        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+//        let container = try ModelContainer(for: UserModel.self, configurations: config)
+//        let createdUser = UserModel(username: "Example Username", age: 10, gender: "Example Gender")
+//        return HomeView(user: createdUser)
+//            .modelContainer(container)
+//    }
+//    catch {
+//        fatalError("Failed to create model container. ")
+//    }
+    
+    
+    HomeView(username: "Guest")
 }
