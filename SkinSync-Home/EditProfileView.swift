@@ -11,31 +11,6 @@ struct EditProfileView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Header Section
-                ZStack {
-                    Color(hex: "#a1aa7b") // Hijau tua
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .edgesIgnoringSafeArea(.top)
-                        .frame(height: 180)
-                    
-                    VStack(alignment: .leading) {
-                        HStack(alignment: .center) {
-                            // Foto Profil
-                            Image(systemName: "person.crop.circle.fill") // Placeholder
-                                .resizable()
-                                .frame(width: 120, height: 120)
-                                .foregroundColor(Color(hex: "#eceade")) // Hijau muda
-                                .background(Color(hex: "#283316")) // Putih
-                                .clipShape(Circle())
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color(hex: "#283316"), lineWidth: 3)
-                                )
-                        }
-                    }
-                }
-                .padding(.bottom, 20) // Menambahkan padding antara header dan tombol
-                
                 // List Options
                 VStack(spacing: 20) {
                     // Username
