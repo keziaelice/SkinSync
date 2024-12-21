@@ -12,17 +12,6 @@ struct HomeView: View {
     let username: String // Accept username as a parameter
     
 //    @Bindable var user: UserModel
-    @State private var searchText: String = "" // Search text for filtering
-    @State private var isSearching = false // Track whether the search overlay is showing
-    private let items = ["SKINTIFIC All Day Light Sunscreen Mist SPF50 PA++++ Sunscreen 50ml/120ml", "SKINTIFIC - 5X Ceramide Serum Sunscreen SPF50 PA++++ 30ml", "Light Serum Sunscreen SPF50 PA ++++25 ml", "SKINTIFIC - 360 Crystal Massager Lifting Eye Cream 20ML", "SKINTIFIC 10% Niacinamide Brightening Serum 20ML", "SKINTIFIC 2% Salicylic Acid Anti Acne Serum 20ML", "SKINTIFIC 5X Ceramide Barrier Repair Moisturize Gel 30G"]
-        
-    var filteredItems: [String] {
-        if searchText.isEmpty {
-            return []
-        } else {
-            return items.filter { $0.localizedCaseInsensitiveContains(searchText) }
-        }
-    }
     
     var body: some View {
         NavigationView {
@@ -37,8 +26,8 @@ struct HomeView: View {
                             VStack {
                                 Color.backgroundColorElement
                                     .ignoresSafeArea(edges: .top)
-                                    .frame(height: 250)
-                                    .cornerRadius(15)
+                                    .frame(height: 200)
+                                    .cornerRadius(25)
                                     .padding(.top, -63)
                             }
                             VStack {
@@ -47,26 +36,13 @@ struct HomeView: View {
                                     .font(.system(size: 22))
                                     .foregroundColor(Color.colorText)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.top, 20)
+                                    .padding(.top, 50)
                                 Text("How's your face condition?")
                                     .font(.system(size: 16))
                                     .foregroundColor(Color.colorText)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.bottom, 20)
                                     .padding(.top, 0.1)
-                                HStack {
-                                    Image(systemName: "magnifyingglass")
-                                        .foregroundColor(.gray)
-                                        .padding(.leading, 10)
-                                    TextField("Search tips, products...", text: $searchText)
-                                        .font(.custom("Montserrat-Regular", size: 16))
-                                        .textInputAutocapitalization(.never)
-                                        .disableAutocorrection(true)
-                                }
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(20)
-                                .shadow(radius: 4)
                             }
                             .padding(30)
                             .padding(.bottom, -70)
@@ -81,7 +57,7 @@ struct HomeView: View {
                                         .font(.system(size: 24, weight: .bold))
                                         .foregroundColor(Color.colorText)
                                     Text("Don't forget to use sunscreen and re-apply it every 3 hours")
-                                        .frame(maxWidth: 200, minHeight: 40)
+                                        .frame(maxWidth: .infinity, minHeight: 40)
                                         .font(.system(size: 14))
                                         .foregroundColor(Color.colorText)
                                     Text("Start Skincare Routine")
@@ -115,7 +91,7 @@ struct HomeView: View {
                                     ForEach(0..<5, id: \.self) { _ in
                                         Text("BRANDS")
                                             .font(.custom("Montserrat-Regular", size: 16))
-                                            .frame(width: 100, height: 100)
+                                            .frame(width: 150, height: 150)
                                             .background(Color.white)
                                             .foregroundColor(Color.colorText)
                                             .cornerRadius(10)
@@ -160,9 +136,13 @@ struct HomeView: View {
                                     .foregroundColor(Color.colorText)
                                 Spacer()
                                 NavigationLink(destination: ProductsView()) {
-                                    Text("See All")
-                                        .foregroundColor(Color.colorText)
-                                        .padding(.trailing, 15)
+                                    HStack {
+                                        Text("See All")
+                                            .foregroundColor(Color.colorText)
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(Color.colorText)
+                                            .padding(.trailing, 15)
+                                    }
                                 }
                             }
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -180,24 +160,6 @@ struct HomeView: View {
                                     }
                                 }
                                 .padding()
-                            }
-                        }
-                        
-                        // Search Results Section (Separate from Search Bar)
-                        if !filteredItems.isEmpty {
-                            VStack(alignment: .leading, spacing: 10) {
-                                Text("Search Results")
-                                    .font(.system(size: 20, weight: .bold))
-                                    .padding(.leading)
-                                    .padding(.top)
-                                    .foregroundColor(Color.colorText)
-                                List(filteredItems, id: \.self) { item in
-                                    Text(item)
-                                        .foregroundColor(Color.colorText)
-                                }
-                                .frame(height: 200) // Adjust list height
-                                .cornerRadius(10)
-                                .padding(.horizontal)
                             }
                         }
                     }
