@@ -12,8 +12,8 @@ import SwiftData
 struct SkinSync_HomeApp: App {
     var body: some Scene {
         WindowGroup {
-            OnboardingView()
-                .modelContainer(for: [UserModel.self, ProductsData.self]) // Daftarkan semua model di sini
+            Pre_OnboardingView()
+                .modelContainer(for: [UserModel.self, ProductsData.self])
         }
     }
 }
