@@ -57,19 +57,21 @@ struct OnboardingView: View {
                             
                             Spacer()
                             
-                            Button("Next") {
+                            Button(action: {
                                 withAnimation {
                                     currentPage = 2
                                     saveProgress()
                                 }
+                            }) {
+                                Text("Next")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(username.isEmpty ? Color.gray : Color(red: 161/255, green: 170/255, blue: 123/255))
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                                    .padding(.horizontal, 30)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(username.isEmpty ? Color.gray : Color(red: 161/255, green: 170/255, blue: 123/255))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                            .padding(.horizontal, 30)
-                            .disabled(username.isEmpty) // Disable button jika username kosong
+                            .disabled(username.isEmpty) // Disable button if username is empty
                         }
                         .tag(1)
                         
@@ -95,18 +97,22 @@ struct OnboardingView: View {
                             
                             Spacer()
                             
-                            Button("Next") {
+                            Button(action: {
                                 withAnimation {
                                     currentPage = 3
                                     saveProgress()
                                 }
+                            })
+                            {
+                                Text("Next")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color(red: 161/255, green: 170/255, blue: 123/255))
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                                    .padding(.horizontal, 30)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color(red: 161/255, green: 170/255, blue: 123/255))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                            .padding(.horizontal, 30)
+
                         }
                         .tag(2)
                         
@@ -142,20 +148,23 @@ struct OnboardingView: View {
                             
                             Spacer()
                             
-                            Button("Let's Get Started") {
+                            Button(action: {
                                 // Simpan data dan tandai onboarding selesai
                                 print("Username: \(username), Age: \(age), Gender: \(selectedGender)")
                                 UserDefaults.standard.set(true, forKey: "isOnboardingComplete")
                                 addUserData(_username: username, _age: age, _gender: selectedGender)
                                 isOnboardingComplete = true
+                            }) {
+                                Text("Let's Get Started")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(selectedGender.isEmpty ? Color.gray : Color(red: 161/255, green: 170/255, blue: 123/255))
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                                    .padding(.horizontal, 30)
                             }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(selectedGender.isEmpty ? Color.gray : Color(red: 161/255, green: 170/255, blue: 123/255))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                            .padding(.horizontal, 30)
                             .disabled(selectedGender.isEmpty) // Disable button jika gender belum dipilih
+
                         }
                         .tag(3)
                     }
