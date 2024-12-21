@@ -11,6 +11,21 @@ import SwiftData
 struct HomeView: View {
     let username: String // Accept username as a parameter
     
+    
+//    @Query(sort: \ProductsData.productname) var products: [ProductsData] // Fetch all products from the database
+//        
+    @State private var randomProducts: [ProductsData] = [] // Store random products
+    
+    
+    @Environment(\.modelContext) var modelContext
+    @State private var products: [ProductsData] = loadProducts()  // Load products on view initialization
+    
+    // Function to select random products
+    func selectRandomProducts() {
+        // Shuffle products and select first 10 random products
+        randomProducts = products.shuffled().prefix(10).map { $0 }
+    }
+    
 //    @Bindable var user: UserModel
     
     var body: some View {
@@ -19,7 +34,7 @@ struct HomeView: View {
                 Color(red: 255/255, green: 250/255, blue: 246/255)
                     .ignoresSafeArea()
                 
-                ScrollView {
+                //ScrollView {
                     VStack {
                         // Hello, Bobby
                         ZStack {
@@ -48,7 +63,7 @@ struct HomeView: View {
                             .padding(.bottom, -70)
                             .padding(.top, -100)
                         }
-                        
+                        ScrollView {
                         // Good Morning
                         HStack {
                             ZStack {
@@ -145,28 +160,44 @@ struct HomeView: View {
                                     }
                                 }
                             }
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 16) {
-                                    ForEach(0..<5, id: \.self) { _ in
-                                        
-                                        Text("PRODUCT")
-                                            .font(.custom("Montserrat-Regular", size: 16))
-                                            .foregroundColor(Color.colorText)
-                                            .frame(width: 150, height: 150)
-                                            .background(Color.white)
-                                            .cornerRadius(10)
-                                            .shadow(radius: 4)
-                                        
+                            ScrollView {
+                                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                                    ForEach(randomProducts, id: \.id) { product in
+                                        NavigationLink(destination: ProductDetailView(productId: product.id)) {
+                                            ProductSquare(product: product, productid: product.id)
+                                        }
                                     }
                                 }
                                 .padding()
+                                .padding(.bottom, 60)
                             }
+//                            ScrollView(.horizontal, showsIndicators: false) {
+//                                HStack(spacing: 16) {
+//                                    ForEach(0..<5, id: \.self) { _ in
+//                                        
+//                                        Text("PRODUCT")
+//                                            .font(.custom("Montserrat-Regular", size: 16))
+//                                            .foregroundColor(Color.colorText)
+//                                            .frame(width: 150, height: 150)
+//                                            .background(Color.white)
+//                                            .cornerRadius(10)
+//                                            .shadow(radius: 4)
+//                                        
+//                                    }
+//                                }
+//                                .padding()
+//                            }
                         }
                     }
+                        .padding(.top, -8)
                 }
             }
         }
         .tint(Color.colorText)
+        .onAppear {
+            selectRandomProducts() // Select random products when the view appears
+        }
+
     }
 }
 
