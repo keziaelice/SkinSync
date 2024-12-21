@@ -88,11 +88,13 @@ struct CustomTabBarButton: View {
             Image(systemName: selected ? filledIcon : icon) // Switch between filled and regular icon
                 .font(.system(size: 24))
                 .foregroundColor(selected ? Color(red: 40/255, green: 51/255, blue:22/255) : Color(red: 40/255, green: 51/255, blue:22/255)) // Use custom color for selection
+                .padding(.top, 5)
             
             Text(icon == "house" ? "Home" : icon == "calendar" ? "Schedule" : icon == "face.smiling" ? "Analyze" : "Profile")
-                .font(.caption)
+                .font(.system(size: 15))
+            
                 .foregroundColor(selected ? Color(red: 40/255, green: 51/255, blue:22/255) : Color(red: 40/255, green: 51/255, blue:22/255)) // Use custom color for selection
-                .padding(.bottom, 10)
+                .padding(.bottom, 15)
         }
     }
 }
@@ -116,5 +118,5 @@ extension View {
 }
 
 #Preview {
-    HomeView(username: "Guest")
+    ContentView()
 }
