@@ -33,6 +33,7 @@ struct Pre_OnboardingView: View {
                         }
                         .offset(x: -CGFloat(currentPage) * geometry.size.width)
                         .animation(.easeInOut, value: currentPage)
+
                     }
                     .frame(height: 600)
 
