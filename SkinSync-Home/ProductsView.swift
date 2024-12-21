@@ -117,8 +117,7 @@ struct ProductsView: View {
             return products
         } else {
             return products.filter { product in
-                product.productname.localizedCaseInsensitiveContains(searchText) ||
-                product.brand.localizedCaseInsensitiveContains(searchText)
+                ("\(product.brand) \(product.productname)").localizedCaseInsensitiveContains(searchText)
             }
         }
     }
@@ -135,20 +134,15 @@ struct ProductsView: View {
                     Color(red: 255/255, green: 250/255, blue: 246/255)
                         .ignoresSafeArea()
                     ScrollView {
-//                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-//                            ForEach(filteredProducts) { product in
-//                                Text(product.skincare ?? "Unknown Product")
-//                            }
-//                        }
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                                 ForEach(filteredProducts) { product in
-                                    NavigationLink(destination: ProductDetailView()) {
-                                        ProductSquare(product: product)
+                                    NavigationLink(destination: ProductDetailView(productId: product.id)) {
+                                        ProductSquare(product: product, productid: product.id)
                                     }
                                 }
                             }
                             .padding()
-                            .padding(.bottom, 15)
+                            .padding(.bottom, 60)
                     }
                 }
                 .navigationTitle("Products")
@@ -186,218 +180,51 @@ struct ProductsView: View {
 // Product square view for displaying each product
 struct ProductSquare: View {
     let product: ProductsData
+    let productid: String
+    @State private var imageExists = true
 
     var body: some View {
         VStack(alignment: .leading) {
             // Replace with actual image handling from ProductsData
-            Image(systemName: "photo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 150)
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
+            Group {
+                        if imageExists {
+                            Image("\(productid)")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 150)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(8)
+                                .onAppear {
+                                    // Check if the image exists in the asset catalog
+                                    if UIImage(named: "\(productid)") == nil {
+                                        imageExists = false // Set the state to false if image doesn't exist
+                                    }
+                                }
+                        } else {
+                            Image(systemName: "photo")  // Fallback image if the original doesn't exist
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 150)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(8)
+                        }
+                    }
+
+
 
             Text((product.brand + " " + product.productname) ?? "Unknown Product") // Use product name
                 .font(.caption)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
-
-            // Example: Displaying other properties from ProductsData
-//            if let price = product.price {
-//                Text("Price: \(price)")
-//                    .font(.caption)
-//            }
-
         }
         .padding()
         .background(Color.white)
         .cornerRadius(8)
         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+        .id(productid)
     }
 }
 
 #Preview {
     ProductsView()
 }
-
-
-//import SwiftUI
-//import SwiftData
-//
-//
-//struct ProductsView: View {
-//    @Environment(\.modelContext) var modelContext
-//    @Query(sort: \ProductsData.id, order: .forward) var products: [ProductsData]
-//
-//    @State private var searchText: String = ""
-//    @State private var isSearching: Bool = false
-//    @State private var searchHistory: [String] = [
-//        "History Search 1",
-//        "History Search 2",
-//        "History Search 3",
-//        "History Search 4",
-//        "History Search 5"
-//    ]
-//    @FocusState private var searchBarFocused: Bool
-//    
-//    var filteredProducts: [ProductsData] {
-//        if searchText.isEmpty {
-//            return products
-//        } else {
-//            return products.filter { product in
-//                product.skincare.localizedCaseInsensitiveContains(searchText) ?? false
-//            }
-//        }
-//    }
-//    
-//    //    var body: some View {
-//    //        NavigationView {
-//    //            ZStack {
-//    //                Color(red: 255/255, green: 250/255, blue: 246/255)
-//    //                    .ignoresSafeArea()
-//    //                VStack {
-//    //                    if isSearching {
-//    //                        if searchText.isEmpty {
-//    //                            List {
-//    //                                Section(header: Text("Search History")) {
-//    //                                    ForEach(searchHistory, id: \.self) { history in
-//    //                                        HStack {
-//    //                                            Image(systemName: "clock")
-//    //                                            Text(history)
-//    //                                            Spacer()
-//    //                                            Button(action: {
-//    //                                                if let index = searchHistory.firstIndex(of: history) {
-//    //                                                    searchHistory.remove(at: index)
-//    //                                                }
-//    //                                            }) {
-//    //                                                Image(systemName: "xmark.circle")
-//    //                                                    .foregroundColor(.gray)
-//    //                                            }
-//    //                                        }
-//    //                                        .contentShape(Rectangle())
-//    //                                        .onTapGesture {
-//    //                                            searchText = history
-//    //                                            searchBarFocused = false
-//    //                                        }
-//    //                                    }
-//    //                                }
-//    //                            }
-//    //                            .listStyle(InsetGroupedListStyle())
-//    //                        } else {
-//    //                            ScrollView {
-//    //                                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-//    //                                    ForEach(filteredProducts) { product in
-//    //                                        NavigationLink(destination: ProductDetailView()) {
-//    //                                            ProductSquare(product: product)
-//    //                                        }
-//    //                                    }
-//    //                                }
-//    //                                .padding()
-//    //                            }
-//    //                        }
-//    //                    } else {
-//    //                        ScrollView {
-//    //                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-//    //                                ForEach(products) { product in
-//    //                                    NavigationLink(destination: ProductDetailView()) {
-//    //                                        ProductSquare(product: product)
-//    //                                    }
-//    //                                }
-//    //                            }
-//    //                            .padding()
-//    //                        }
-//    //                    }
-//    //                }
-//    //                .navigationTitle("Products")
-//    //                .searchable(text: $searchText, prompt: "Search products")
-//    //                .textInputAutocapitalization(.never)
-//    //                .focused($searchBarFocused)
-//    //                .onChange(of: searchBarFocused) {
-//    //                    if $0 {
-//    //                        isSearching = true
-//    //                    } else {
-//    //                        isSearching = false
-//    //                        searchText = ""
-//    //                    }
-//    //                }
-//    //                .onChange(of: searchText) {
-//    //                    if $0.isEmpty {
-//    //                        isSearching = true
-//    //                    } else {
-//    //                        isSearching = true
-//    //                    }
-//    //                }
-//    //                .onSubmit {
-//    //                    if !searchText.isEmpty && !searchHistory.contains(searchText) {
-//    //                        searchHistory.insert(searchText, at: 0)
-//    //                    }
-//    //                    searchBarFocused = false
-//    //                }
-//    //                .toolbarBackground(Color.backgroundColorElement, for: .navigationBar)
-//    //                .toolbarBackground(.visible, for: .navigationBar)
-//    //            }
-//    //        }
-//    //        .tint(Color.black)
-//    //    }
-//    //}
-//    
-//    var body: some View {
-//        NavigationView {
-//            if products.isEmpty {
-//                Text("No products found in database")
-//                    .onAppear {
-//                        print("Products array is empty")
-//                    }
-//            } else {
-//                ZStack {
-//                    Color(red: 255/255, green: 250/255, blue: 246/255)
-//                        .ignoresSafeArea()
-//                    ScrollView {
-//                        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-//                            ForEach(products) { product in
-//                                Text(product.skincare ?? "Unknown Product")
-//                            }
-//                        }
-//                    }
-//                }
-//                .navigationTitle("Products")
-//            }
-//        }
-//    }
-//}
-//
-//struct ProductSquare: View {
-//    let product: ProductsData
-//
-//    var body: some View {
-//        VStack(alignment: .leading) {
-//            // Replace with actual image handling from ProductsData
-//            Image(systemName: "photo")
-//                .resizable()
-//                .aspectRatio(contentMode: .fit)
-//                .frame(height: 150)
-//                .background(Color(.systemGray6))
-//                .cornerRadius(8)
-//
-//            Text(product.skincare ?? "Unknown Product") // Use product name
-//                .font(.headline)
-//                .lineLimit(2)
-//                .multilineTextAlignment(.leading)
-//
-//            // Example: Displaying other properties from ProductsData
-////            if let price = product.price {
-////                Text("Price: \(price)")
-////                    .font(.caption)
-////            }
-//
-//        }
-//        .padding()
-//        .background(Color.white)
-//        .cornerRadius(8)
-//        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
-//    }
-//}
-//
-//#Preview {
-//    ProductsView()
-//}

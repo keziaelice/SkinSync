@@ -7,7 +7,7 @@ struct CustomTabView: View {
         ZStack {
             Group {
                 if selectedTab == 0 {
-                    ScheduleView()
+                    EditScheduleView()
                 } else if selectedTab == 1 {
 //                                    SearchView()
                 } else if selectedTab == 2 {
