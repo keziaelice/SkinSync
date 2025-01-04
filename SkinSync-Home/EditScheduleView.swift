@@ -1,5 +1,10 @@
 import SwiftUI
 
+// Rename ProductListType to avoid conflicts
+enum ScheduleProductListType {
+    case morning, night
+}
+
 struct EditScheduleView: View {
     @State private var morningProducts: [String: [String]] = [
         "Monday": ["3X Acid Acne Gel Cleanser", "SymWhite 377 Dark Spot Serum"],
@@ -20,115 +25,119 @@ struct EditScheduleView: View {
         "Saturday": ["2% Salicylic Acid Anti Acne Serum", "5X Ceramide Barrier Serum"],
         "Sunday": ["2% Salicylic Acid Anti Acne Serum", "5X Ceramide Barrier Serum"]
     ]
-
+    
+    @State private var selectedDay: String = ""
+    @State private var listType: ScheduleProductListType = .morning
+    @State private var showProductView: Bool = false
+    
     var body: some View {
         NavigationView {
             VStack {
-                // TabView for Morning and Night
                 TabView {
-                    // Morning Products Tab
-                    VStack {
-                        List {
-                            ForEach(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], id: \.self) { day in
-                                Section(header: Text(day).font(.headline)) {
-                                    ForEach(morningProducts[day] ?? [], id: \.self) { product in
-                                        ProductCard(product: product, listType: .morning)
-                                    }
-                                    .onDelete { indexSet in
-                                        deleteItem(from: &morningProducts[day]!, at: indexSet)
-                                    }
-                                    Button(action: {
-                                        addNewItem(to: .morning, day: day)
-                                    }) {
-                                        HStack {
-                                            Image(systemName: "plus.circle.fill")
-                                                .foregroundColor(.blue)
-                                            Text("Add New Item")
-                                                .foregroundColor(.blue)
-                                        }
-                                    }
-                                }
-                            }
+                    productListView(listType: .morning)
+                        .tabItem {
+                            Label("Morning", systemImage: "sun.max.fill")
                         }
-                        .listStyle(InsetGroupedListStyle())
-                    }
-                    .tabItem {
-                        Label("Morning", systemImage: "sun.max.fill")
-                    }
-
-                    // Night Products Tab
-                    VStack {
-                        List {
-                            ForEach(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], id: \.self) { day in
-                                Section(header: Text(day).font(.headline)) {
-                                    ForEach(nightProducts[day] ?? [], id: \.self) { product in
-                                        ProductCard(product: product, listType: .night)
-                                    }
-                                    .onDelete { indexSet in
-                                        deleteItem(from: &nightProducts[day]!, at: indexSet)
-                                    }
-                                    Button(action: {
-                                        addNewItem(to: .night, day: day)
-                                    }) {
-                                        HStack {
-                                            Image(systemName: "plus.circle.fill")
-                                                .foregroundColor(.blue)
-                                            Text("Add New Item")
-                                                .foregroundColor(.blue)
-                                        }
-                                    }
-                                }
-                            }
+                    
+                    productListView(listType: .night)
+                        .tabItem {
+                            Label("Night", systemImage: "moon.fill")
                         }
-                        .listStyle(InsetGroupedListStyle())
-                    }
-                    .tabItem {
-                        Label("Night", systemImage: "moon.fill")
-                    }
                 }
                 .navigationTitle("Schedule")
-                .navigationBarBackButtonHidden(true) // Hide the back button
+                .sheet(isPresented: $showProductView) {
+                    ProductView(
+                        availableProducts: ["3X Acid Acne Gel Cleanser", "SymWhite 377 Dark Spot Serum", "2% Salicylic Acid Anti Acne Serum", "5X Ceramide Barrier Serum"],
+                        onSelectProduct: { product in
+                            addProduct(product, to: listType, day: selectedDay)
+                            showProductView = false
+                        }
+                    )
+                }
             }
         }
     }
-
-    // Function to add a new item to the Morning or Night products for a specific day
-    private func addNewItem(to listType: ProductListType, day: String) {
-        let newProduct = "New Product \(listType == .morning ? morningProducts[day]!.count + 1 : nightProducts[day]!.count + 1)"
+    
+    private func productListView(listType: ScheduleProductListType) -> some View {
+        let products = listType == .morning ? morningProducts : nightProducts
+        
+        return List {
+            ForEach(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], id: \.self) { day in
+                Section(header: Text(day).font(.headline)) {
+                    ForEach(products[day] ?? [], id: \.self) { product in
+                        ProductCard(product: product, listType: listType)
+                    }
+                    .onDelete { indexSet in
+                        if listType == .morning {
+                            deleteItem(from: &morningProducts[day]!, at: indexSet)
+                        } else {
+                            deleteItem(from: &nightProducts[day]!, at: indexSet)
+                        }
+                    }
+                    
+                    Button(action: {
+                        selectedDay = day
+                        self.listType = listType
+                        showProductView = true
+                    }) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(.blue)
+                            Text("Add New Item")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+            }
+        }
+        .listStyle(InsetGroupedListStyle())
+    }
+    
+    private func addProduct(_ product: String, to listType: ScheduleProductListType, day: String) {
         if listType == .morning {
-            morningProducts[day]?.append(newProduct)
+            morningProducts[day]?.append(product)
         } else {
-            nightProducts[day]?.append(newProduct)
+            nightProducts[day]?.append(product)
         }
     }
-
-    // Function to delete an item from the list
+    
     private func deleteItem(from list: inout [String], at indexSet: IndexSet) {
         list.remove(atOffsets: indexSet)
     }
 }
 
-// Enum to determine whether the new product is for Morning or Night
-enum ProductListType {
-    case morning, night
+struct ProductView: View {
+    let availableProducts: [String]
+    let onSelectProduct: (String) -> Void
+    
+    var body: some View {
+        NavigationView {
+            List(availableProducts, id: \.self) { product in
+                Button(action: {
+                    onSelectProduct(product)
+                }) {
+                    Text(product)
+                }
+            }
+            .navigationTitle("Select Product")
+        }
+    }
 }
 
-// Card view for each product
+// Rename ProductCard to avoid conflicts
 struct ProductCard: View {
     var product: String
-    var listType: ProductListType
-
+    var listType: ScheduleProductListType
+    
     var body: some View {
         HStack {
             Text(product)
                 .font(.body)
-                .padding(.leading, -0)  // Remove leading padding to align text directly to the left
             Spacer()
         }
-        .padding(.vertical, 2)  // Reduced vertical padding for closer spacing
+        .padding(.vertical, 2)
         .background(Color.white)
         .cornerRadius(10)
-        .padding(.leading, 0)
     }
 }
 
