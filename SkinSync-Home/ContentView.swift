@@ -26,7 +26,7 @@ struct ContentView: View {
 //                    HomeView()
                     HomeView(username: users.first?.username ?? "Guest") // Pass username to HomeView
                 } else if selectedTab == 1 {
-                    ScheduleView()
+                    EditScheduleView()
                 } else if selectedTab == 2 {
                     cbproduct()
                 } else if selectedTab == 3 {
