@@ -1,166 +1,167 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @AppStorage("username") private var storedUsername: String = ""
+    @AppStorage("age") private var storedAge: String = ""
+    
+    @State private var isDarkMode: Bool = false
+    @State private var showAlert: Bool = false
+    @State private var showSaveNotification: Bool = false
+    @State private var username: String = ""
+    @State private var age: String = ""
+    
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                // Header Section
-                ZStack {
-                    Color(hex: "#a1aa7b") // Hijau tua
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .edgesIgnoringSafeArea(.top)
-                        .frame(height: 180)
-                    
-                    VStack(alignment: .leading) {
-                        // Judul Profile Setting
-                        Text("Profile Setting")
-                            .font(.title3)
-                            .foregroundColor(Color(hex: "#283316"))
-                            .padding()
-                            .fontWeight(.heavy)
-                            .padding(.leading, 20)
-                        
-                        HStack(alignment: .center) {
-                            // Foto Profil
-                            Image(systemName: "person.crop.circle.fill") // Placeholder
-                                .resizable()
-                                .frame(width: 80, height: 80)
-                                .foregroundColor(Color(hex: "#eceade")) // Hijau muda
-                                .background(Color(hex: "#283316")) // Putih
-                                .clipShape(Circle())
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color(hex: "#283316"), lineWidth: 3)
-                                )
-                                .padding(.leading, 25) // Geser foto profil ke kanan
-                            
-                            // Teks di sebelah Foto Profil
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text("Hello")
-                                    .font(.subheadline)
-                                    .foregroundColor(Color(hex: "#283316"))
-                                
-                                Text("Bobby Adrian")
-                                    .font(.headline)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(Color(hex: "#283316"))
-                            }
-                            .padding(.leading, 10) // Geser teks ke kanan
-                            
-                            Spacer()
-                            
-                            // Tombol Edit dengan NavigationLink
-                            NavigationLink(destination: EditProfileView()) {
-                                Image(systemName: "pencil.circle.fill")
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(Color(hex: "#283316"))
-                            }
-                            .padding(.trailing, 40) // Geser tombol edit ke kanan
-                        }
+            Form {
+                // Dark Mode Toggle
+                Section(header: Text("Appearance")) {
+                    Toggle(isOn: $isDarkMode) {
+                        Text("Dark Mode")
+                    }
+                    .onChange(of: isDarkMode) { value in
+                        toggleAppearance(darkMode: value)
                     }
                 }
-                .padding(.bottom, 20) // Menambahkan padding antara header dan tombol
                 
-                // "Check Your Progress" Button
-                Button(action: {
-                    // Aksi untuk progress
-                }) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Check your")
-                                .font(.title3)
-                                .bold()
-                                .foregroundColor(Color.white)
-                            
-                            Text("progress")
-                                .font(.title3)
-                                .bold()
-                                .foregroundColor(Color.white)
-                        }
-                        Spacer()
-                        Image(systemName: "clock.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .padding(.trailing, 20)
-                            .frame(width: 70, height: 70) // Ukuran ikon
-                            .foregroundColor(Color.white)
-                    }
-                    .padding() // Menambahkan ruang di dalam tombol
-                    .padding(.vertical, 10)
-                    .background(Color.yellow) // Warna latar belakang tombol
-                    .cornerRadius(15) // Membuat sudut tombol membulat
-                    .shadow(radius: 2) // Menambahkan bayangan untuk tombol
+                // Name and Age Input
+                Section(header: Text("Personal Information")) {
+                    TextField("Name", text: $username)
+                        .textInputAutocapitalization(.words)
+                    TextField("Age", text: $age)
+                        .keyboardType(.numberPad)
                 }
-                .padding(.horizontal) // Memberikan padding luar tombol
-                .padding(.bottom, 20)
                 
-                // List Options
-                List {
-                    NavigationLink(destination: Text("Saved")) {
-                        Text("Saved")
-                            .font(.headline) // Bold
-                            .foregroundColor(Color(hex: "#181717")) // Hitam
-                            .padding(.vertical, 8) // Mengurangi padding vertikal
+                // About Us and Contact Us
+                Section(header: Text("Information")) {
+                    NavigationLink(destination: AboutUsView()) {
+                        Text("About Us")
                     }
-                    
-                    NavigationLink(destination: Text("Setting")) {
-                        Text("Setting")
-                            .font(.headline) // Bold
-                            .foregroundColor(Color(hex: "#181717")) // Hitam
-                            .padding(.vertical, 8) // Mengurangi padding vertikal
+                    NavigationLink(destination: ContactUsView()) {
+                        Text("Contact Us")
                     }
-                    
-                    NavigationLink(destination: Text("Support")) {
-                        Text("Support")
-                            .font(.headline) // Bold
-                            .foregroundColor(Color(hex: "#181717")) // Hitam
-                            .padding(.vertical, 8) // Mengurangi padding vertikal
-                    }
-                    
-                    NavigationLink(destination: Text("About Us")) {
-                        Text("About us")
-                            .font(.headline) // Bold
-                            .foregroundColor(.black) // Hitam
-                            .padding(.vertical, 8) // Mengurangi padding vertikal
-                    }
-                    
+                }
+                
+                // Reset Data
+                Section {
                     Button(action: {
-                        // Aksi untuk logout
+                        resetData()
                     }) {
-                        Text("Logout")
-                            .font(.headline) // Bold
-                            .foregroundColor(.red) // Warna merah untuk Logout
-                            .padding(.vertical, 8) // Mengurangi padding vertikal
+                        Text("Reset Data")
+                            .foregroundColor(.red)
                     }
                 }
-                .listStyle(PlainListStyle())
-                .clipShape(RoundedRectangle(cornerRadius: 15)) // Membuat list lebih rounded
-                .padding(.horizontal)
             }
-            .background(Color(hex: "#fffaf6")) // Cream
+            .navigationTitle("Profile")
+            .onAppear {
+                loadData() // Memuat data saat halaman dibuka
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        saveData()
+                    }
+                }
+            }
+            .alert("Data Saved", isPresented: $showSaveNotification) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Your data has been successfully saved.")
+            }
+            .alert("Data Reset", isPresented: $showAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Your data has been reset.")
+            }
         }
+    }
+    
+    private func toggleAppearance(darkMode: Bool) {
+        if let window = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first(where: { $0.isKeyWindow }) {
+            window.overrideUserInterfaceStyle = darkMode ? .dark : .light
+        }
+    }
+    
+    private func resetData() {
+        username = ""
+        age = ""
+        storedUsername = ""
+        storedAge = ""
+        isDarkMode = false
+        toggleAppearance(darkMode: false)
+        showAlert = true
+    }
+    
+    private func saveData() {
+        guard !username.isEmpty, !age.isEmpty else {
+            print("Name or Age is empty.")
+            return
+        }
+        storedUsername = username
+        storedAge = age
+        print("Data saved: Name: \(storedUsername), Age: \(storedAge)")
+        showSaveNotification = true // Tampilkan notifikasi
+    }
+    
+    private func loadData() {
+        username = storedUsername
+        age = storedAge
+        print("Data loaded: Name: \(username), Age: \(age)")
     }
 }
 
-// Extension untuk Color
-extension Color {
-init(hex: String) {
-    let scanner = Scanner(string: hex)
-    _ = scanner.scanString("#")
-    var hexNumber: UInt64 = 0
-    scanner.scanHexInt64(&hexNumber)
-    
-    let r = Double((hexNumber & 0xff0000) >> 16) / 255
-    let g = Double((hexNumber & 0x00ff00) >> 8) / 255
-    let b = Double(hexNumber & 0x0000ff) / 255
-    
-    self.init(red: r, green: g, blue: b)
+struct AboutUsView: View {
+    var body: some View {
+        VStack {
+
+            Text("""
+SkinSync is an innovative application that helps users detect their skin type using cutting-edge camera technology and machine learning algorithms. 
+
+In addition, it offers personalized quizzes to assist users in scheduling and maintaining skincare routines tailored to their specific skin type. Whether you are a skincare enthusiast or a beginner, SkinSync aims to empower users to take control of their skincare journey with ease and confidence.
+
+Join us in revolutionizing the way we care for our skin!
+""")
+                .font(.title3)
+                .multilineTextAlignment(.center)
+                .padding()
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(UIColor.systemBackground))
+        .navigationTitle("About Us")
+    }
 }
+
+struct ContactUsView: View {
+    var body: some View {
+        VStack {
+
+            Text("""
+We would love to hear from you!
+
+If you have any questions, feedback, or concerns, feel free to reach out to us via email:
+
+skinskinsyncsync@gmail.com
+
+Follow us on social media to stay updated with our latest features and offers.
+""")
+                .font(.title3)
+                .multilineTextAlignment(.center)
+                .padding()
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(UIColor.systemBackground))
+        .navigationTitle("Contact Us")
+    }
 }
 
 struct ProfileView_Previews: PreviewProvider {
-static var previews: some View {
-    ProfileView()
-}
+    static var previews: some View {
+        ProfileView()
+    }
 }
