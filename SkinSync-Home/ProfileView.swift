@@ -11,6 +11,9 @@ struct ProfileView: View {
     @State private var age: String = ""
     
     var body: some View {
+        ZStack{
+            Color(red: 255/255, green: 250/255, blue: 246/255)
+                .ignoresSafeArea()
         NavigationView {
             Form {
                 // Dark Mode Toggle
@@ -72,6 +75,7 @@ struct ProfileView: View {
             } message: {
                 Text("Your data has been reset.")
             }
+        }
         }
     }
     
