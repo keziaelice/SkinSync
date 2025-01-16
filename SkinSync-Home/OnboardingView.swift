@@ -161,13 +161,11 @@ struct OnboardingView: View {
     
     @State private var username: String = OnboardingHelper.retrieveFromUserDefaults(key: "username", defaultValue: "")
     @State private var age: Int = OnboardingHelper.retrieveFromUserDefaults(key: "age", defaultValue: 18)
-    @State private var selectedGender: String = OnboardingHelper.retrieveFromUserDefaults(key: "gender", defaultValue: "")
     @State private var isOnboardingComplete: Bool = OnboardingHelper.retrieveFromUserDefaults(key: "isOnboardingComplete", defaultValue: false)
     @State private var currentPage: Int = OnboardingHelper.retrieveFromUserDefaults(key: "currentPageOnboarding", defaultValue: 0)
 
     
-    let genders = ["Male", "Female"]
-    private let totalPages = 3
+    private let totalPages = 2
     
     var body: some View {
         if isOnboardingComplete {
@@ -175,7 +173,7 @@ struct OnboardingView: View {
         } else {
             NavigationStack {
                 ZStack {
-                    Color(red: 255/255, green: 250/255, blue: 246/255)
+                    Color.backgroundColorPage
                         .ignoresSafeArea()
                     VStack {
                         ProgressBar(currentPage: currentPage, totalPages: totalPages)
@@ -186,7 +184,7 @@ struct OnboardingView: View {
                             HStack(spacing: 0) {
                                 onboardingStep1(geometry: geometry)
                                 onboardingStep2(geometry: geometry)
-                                onboardingStep3(geometry: geometry)
+//                                onboardingStep3(geometry: geometry)
                             }
                             .offset(x: -CGFloat(currentPage) * geometry.size.width)
                             .animation(.easeInOut, value: currentPage)
@@ -196,12 +194,16 @@ struct OnboardingView: View {
                     }
                 }
                 .navigationBarBackButtonHidden(true)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    hideKeyboard()
+                }
             }
         }
     }
     
     // MARK: - Onboarding Steps
-    private func onboardingStep1(geometry: GeometryProxy) -> some View {
+    func onboardingStep1(geometry: GeometryProxy) -> some View {
         VStack {
             Text("Tell us your name")
                 .font(.title2)
@@ -226,7 +228,7 @@ struct OnboardingView: View {
         .frame(width: geometry.size.width)
     }
     
-    private func onboardingStep2(geometry: GeometryProxy) -> some View {
+    func onboardingStep2(geometry: GeometryProxy) -> some View {
         VStack {
             Text("What's your age?")
                 .font(.title2)
@@ -245,66 +247,26 @@ struct OnboardingView: View {
             .onChange(of: age) { _ in saveProgress() }
             
             Spacer()
-            
-            Button(action: { goToNextPage(2) }) {
-                buttonLabel("Next", isEnabled: true)
-            }
-        }
-        .frame(width: geometry.size.width)
-    }
-    
-    private func onboardingStep3(geometry: GeometryProxy) -> some View {
-        VStack {
-            Text("What's your gender?")
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding()
-            
-            HStack(spacing: 20) {
-                ForEach(genders, id: \.self) { gender in
-                    Button(action: { selectGender(gender) }) {
-                        VStack {
-                            Image(genderIcon(for: gender, isSelected: selectedGender == gender))
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 100, height: 100)
-                                .padding()
-                                .background(selectedGender == gender ? genderColor(for: gender) : Color.gray.opacity(0.2))
-                                .clipShape(Circle())
-                            
-                            Text(gender)
-                                .font(.title2)
-                                .foregroundColor(.black)
-                        }
-                    }
-                }
-            }
-            
-            Spacer()
-            
             Button(action: completeOnboarding) {
-                buttonLabel("Let's Get Started", isEnabled: !selectedGender.isEmpty)
-               
+                buttonLabel("Let's Get Started", isEnabled: true)
             }
-            .disabled(selectedGender.isEmpty)
-            
         }
         .frame(width: geometry.size.width)
     }
     
-    func addUserData(_username: String, _age: Int, _gender: String) {
-        let newUser = UserModel(username: _username, age: _age, gender: _gender)
+    func addUserData(_username: String, _age: Int) {
+        let newUser = UserModel(username: _username, age: _age)
         modelContext.insert(newUser)
     }
     
-    private func ProgressBar(currentPage: Int, totalPages: Int) -> some View {
+    func ProgressBar(currentPage: Int, totalPages: Int) -> some View {
         ProgressView(value: Double(currentPage), total: Double(totalPages))
             .progressViewStyle(LinearProgressViewStyle(tint: Color(red: 161/255, green: 170/255, blue: 123/255)))
             .frame(height: 10)
             .padding()
     }
     
-    private func buttonLabel(_ text: String, isEnabled: Bool) -> some View {
+    func buttonLabel(_ text: String, isEnabled: Bool) -> some View {
         Text(text)
             .frame(maxWidth: .infinity)
             .padding()
@@ -314,54 +276,38 @@ struct OnboardingView: View {
             .padding(.horizontal, 30)
     }
     
-    private func saveProgress() {
+    func saveProgress() {
         OnboardingHelper.saveToUserDefaults(key: "username", value: username)
         OnboardingHelper.saveToUserDefaults(key: "age", value: age)
-        OnboardingHelper.saveToUserDefaults(key: "gender", value: selectedGender)
         OnboardingHelper.saveToUserDefaults(key: "currentPageOnboarding", value: currentPage)
     }
     
-    private func goToNextPage(_ page: Int) {
+    func goToNextPage(_ page: Int) {
+        hideKeyboard()
         withAnimation { currentPage = page }
     }
     
-    private func selectGender(_ gender: String) {
-        selectedGender = gender
-        saveProgress()
-    }
-    
-    private func genderIcon(for gender: String, isSelected: Bool) -> String {
-        switch gender {
-        case "Male": return isSelected ? "male-selected" : "male-unselected"
-        case "Female": return isSelected ? "female-selected" : "female-unselected"
-        default: return "questionmark.circle"
+    func hideKeyboard() {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         }
-    }
     
-    private func genderColor(for gender: String) -> Color {
-        if selectedGender.isEmpty || selectedGender != gender {
-            return Color.gray.opacity(0.2)
-        }
-        
-        switch gender {
-        case "Male":
-            return Color(red: 0.5882, green: 0.7529, blue: 1.0)
-        case "Female":
-            return Color(red: 0.9922, green: 0.6863, blue: 0.6863)
-        default:
-            return Color.gray.opacity(0.2)
-        }
-    }
-    
-    private func completeOnboarding() {
+    func completeOnboarding() {
         OnboardingHelper.saveToUserDefaults(key: "isOnboardingComplete", value: true)
         OnboardingHelper.saveToUserDefaults(key: "username", value: username)
         OnboardingHelper.saveToUserDefaults(key: "age", value: age)
-        OnboardingHelper.saveToUserDefaults(key: "gender", value: selectedGender)
         isOnboardingComplete = true
         UserDefaults.standard.set(true, forKey: "isOnboardingComplete")
         
-        addUserData(_username: username, _age: age, _gender: selectedGender)
+        addUserData(_username: username, _age: age)
+    }
+}
+
+extension View {
+    func dismissKeyboardOnTap() -> some View {
+        self.contentShape(Rectangle())
+            .onTapGesture {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }
     }
 }
 

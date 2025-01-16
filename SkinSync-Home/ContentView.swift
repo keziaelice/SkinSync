@@ -28,7 +28,6 @@ struct ContentView: View {
                 } else if selectedTab == 1 {
                     EditScheduleView()
                 } else if selectedTab == 2 {
-                    //cbproduct()
                     ScanIntroView()
                 } else if selectedTab == 3 {
                     ProfileView()
@@ -53,7 +52,7 @@ struct ContentView: View {
                             }
                         }
                     Spacer()
-                    CustomTabBarButton(icon: "face.smiling", filledIcon: "face.smiling.fill", selected: selectedTab == 2)
+                    CustomTabBarButton(icon: "camera", filledIcon: "camera.circle.fill", selected: selectedTab == 2)
                         .onTapGesture {
                             withAnimation {
                                 selectedTab = 2
@@ -71,8 +70,8 @@ struct ContentView: View {
                 .padding()
                 .background(Color.backgroundColorElement) // Green color for the tab bar
                 .cornerRadius(25, corners: [.topLeft, .topRight]) // Rounded corners at the top
-                .ignoresSafeArea(edges: .bottom) // Extend to the bottom edge to fill the space
             }
+            .ignoresSafeArea(edges: .bottom) // Extend to the bottom edge to fill the space
             .padding(.top, 10)
             .padding(.bottom, -34) // Remove extra space below the tab bar
         }
@@ -91,7 +90,7 @@ struct CustomTabBarButton: View {
                 .foregroundColor(selected ? Color(red: 40/255, green: 51/255, blue:22/255) : Color(red: 40/255, green: 51/255, blue:22/255)) // Use custom color for selection
                 .padding(.top, 5)
             
-            Text(icon == "house" ? "Home" : icon == "calendar" ? "Schedule" : icon == "face.smiling" ? "Analyze" : "Profile")
+            Text(icon == "house" ? "Home" : icon == "calendar" ? "Schedule" : icon == "camera" ? "Analyze" : "Profile")
                 .font(.system(size: 15))
             
                 .foregroundColor(selected ? Color(red: 40/255, green: 51/255, blue:22/255) : Color(red: 40/255, green: 51/255, blue:22/255)) // Use custom color for selection
