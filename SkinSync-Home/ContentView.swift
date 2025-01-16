@@ -28,7 +28,8 @@ struct ContentView: View {
                 } else if selectedTab == 1 {
                     EditScheduleView()
                 } else if selectedTab == 2 {
-                    cbproduct()
+                    //cbproduct()
+                    ScanIntroView()
                 } else if selectedTab == 3 {
                     ProfileView()
                 }

@@ -78,7 +78,7 @@ func loadProducts() -> [ProductsData] {
             
             // If the column count is correct, process the row
             if columns.count == columnCount {
-                print("Parsing row \(index): \(columns)")  // Debugging
+                //print("Parsing row \(index): \(columns)")  // Debugging
                 let thisProduct = ProductsData(id: columns[0],
                                                category: columns[1],
                                                brand: columns[2],
