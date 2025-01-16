@@ -87,7 +87,7 @@ struct ResultView: View {
                             Image("\(product.id)")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 40, height: 40)
+                                .frame(width: 250, height: 250)
                                 .cornerRadius(4)
                             
                             Text("\(product.productname)")
@@ -114,6 +114,7 @@ struct ResultView: View {
                     }
                 }
             }
+            .padding(.bottom, 60)
         }
         .onAppear {
             // Update recommended products when view appears

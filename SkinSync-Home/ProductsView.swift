@@ -131,7 +131,7 @@ struct ProductsView: View {
                     }
             } else {
                 ZStack {
-                    Color(red: 255/255, green: 250/255, blue: 246/255)
+                    Color.backgroundColorPage
                         .ignoresSafeArea()
                     ScrollView {
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
@@ -218,7 +218,7 @@ struct ProductSquare: View {
                 .multilineTextAlignment(.leading)
         }
         .padding()
-        .background(Color.white)
+        .background(Color.backgroundColorPage)
         .cornerRadius(8)
         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
         .id(productid)

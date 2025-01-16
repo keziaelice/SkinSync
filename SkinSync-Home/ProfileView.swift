@@ -1,8 +1,9 @@
 import SwiftUI
+import SwiftData
 
 struct ProfileView: View {
-    @AppStorage("username") private var storedUsername: String = ""
-    @AppStorage("age") private var storedAge: String = ""
+    @Environment(\.modelContext) private var modelContext
+    @Query private var users: [UserModel]
     
     @State private var isDarkMode: Bool = false
     @State private var showAlert: Bool = false
@@ -11,71 +12,79 @@ struct ProfileView: View {
     @State private var age: String = ""
     
     var body: some View {
-        ZStack{
-            Color(red: 255/255, green: 250/255, blue: 246/255)
-                .ignoresSafeArea()
-        NavigationView {
-            Form {
-                // Dark Mode Toggle
-                Section(header: Text("Appearance")) {
-                    Toggle(isOn: $isDarkMode) {
-                        Text("Dark Mode")
+        ZStack {
+            (isDarkMode ? Color("backgroundColorPage") : Color("backgroundColorPage"))
+                            .ignoresSafeArea()
+            NavigationView {
+                Form {
+                    // Dark Mode Toggle
+                    Section(header: Text("Appearance")) {
+                        Toggle(isOn: $isDarkMode) {
+                            Text("Dark Mode")
+                        }
+                        .onChange(of: isDarkMode) { value in
+                            toggleAppearance(darkMode: value)
+                        }
                     }
-                    .onChange(of: isDarkMode) { value in
-                        toggleAppearance(darkMode: value)
+                    
+                    // Name and Age Input
+                    Section(header: Text("Personal Information")) {
+                        TextField("Name", text: $username)
+                            .textInputAutocapitalization(.words)
+                        TextField("Age", text: $age)
+                            .keyboardType(.numberPad)
                     }
-                }
-                
-                // Name and Age Input
-                Section(header: Text("Personal Information")) {
-                    TextField("Name", text: $username)
-                        .textInputAutocapitalization(.words)
-                    TextField("Age", text: $age)
-                        .keyboardType(.numberPad)
-                }
-                
-                // About Us and Contact Us
-                Section(header: Text("Information")) {
-                    NavigationLink(destination: AboutUsView()) {
-                        Text("About Us")
-                    }
-                    NavigationLink(destination: ContactUsView()) {
-                        Text("Contact Us")
-                    }
-                }
-                
-                // Reset Data
-                Section {
-                    Button(action: {
-                        resetData()
-                    }) {
-                        Text("Reset Data")
-                            .foregroundColor(.red)
-                    }
-                }
-            }
-            .navigationTitle("Profile")
-            .onAppear {
-                loadData() // Memuat data saat halaman dibuka
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        saveData()
+                    
+//                    // About Us and Contact Us
+//                    Section(header: Text("Information")) {
+//                        NavigationLink(destination: AboutUsView()) {
+//                            Text("About Us")
+//                        }
+//                        NavigationLink(destination: ContactUsView()) {
+//                            Text("Contact Us")
+//                        }
+//                    }
+                    
+                    // Reset Data
+                    Section {
+                        Button(action: {
+                            resetData()
+                        }) {
+                            Text("Reset Data")
+                                .foregroundColor(.red)
+                        }
                     }
                 }
+                .scrollContentBackground(.hidden) // Hides the default form background
+                .background(Color.backgroundColorPage) // Custom background
+                .listRowBackground(Color.backgroundColorPage) // Matches section background
+                .navigationTitle("Profile")
+                .toolbarBackground(Color.backgroundColorElement, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+            
+                .onAppear {
+                    loadData()
+                }
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Save") {
+                            saveData()
+                        }
+                        .foregroundColor(Color.backgroundColorPage)
+                    }
+                }
+                .alert("Data Saved", isPresented: $showSaveNotification) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text("Your data has been successfully saved.")
+                }
+                .alert("Data Reset", isPresented: $showAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text("Your data has been reset.")
+                }
             }
-            .alert("Data Saved", isPresented: $showSaveNotification) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("Your data has been successfully saved.")
-            }
-            .alert("Data Reset", isPresented: $showAlert) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("Your data has been reset.")
-            }
-        }
+            .background(Color.backgroundColorPage)
         }
     }
     
@@ -89,78 +98,60 @@ struct ProfileView: View {
     }
     
     private func resetData() {
+        // Delete all existing users
+        for user in users {
+            modelContext.delete(user)
+        }
+        
+        try? modelContext.save()
+        
         username = ""
         age = ""
-        storedUsername = ""
-        storedAge = ""
         isDarkMode = false
         toggleAppearance(darkMode: false)
         showAlert = true
+        
+        UserDefaults.standard.removeObject(forKey: "username")
+        UserDefaults.standard.removeObject(forKey: "age")
+        UserDefaults.standard.removeObject(forKey: "currentPageOnboarding")
+        UserDefaults.standard.removeObject(forKey: "isOnboardingComplete")
+
     }
     
     private func saveData() {
-        guard !username.isEmpty, !age.isEmpty else {
-            print("Name or Age is empty.")
+        guard !username.isEmpty, !age.isEmpty,
+              let ageInt = Int(age) else {
+            print("Invalid input: Name or Age is empty or Age is not a number")
             return
         }
-        storedUsername = username
-        storedAge = age
-        print("Data saved: Name: \(storedUsername), Age: \(storedAge)")
-        showSaveNotification = true // Tampilkan notifikasi
+        
+        // Update existing user or create new one
+        if let existingUser = users.first {
+            // Update existing user
+            existingUser.username = username
+            existingUser.age = ageInt
+        } else {
+            // Create new user
+            let newUser = UserModel(username: username, age: ageInt)
+            modelContext.insert(newUser)
+        }
+        
+        // Save changes
+        do {
+            try modelContext.save()
+            showSaveNotification = true
+            print("Data saved successfully: Name: \(username), Age: \(age)")
+        } catch {
+            print("Error saving data: \(error)")
+        }
     }
     
     private func loadData() {
-        username = storedUsername
-        age = storedAge
-        print("Data loaded: Name: \(username), Age: \(age)")
-    }
-}
-
-struct AboutUsView: View {
-    var body: some View {
-        VStack {
-
-            Text("""
-SkinSync is an innovative application that helps users detect their skin type using cutting-edge camera technology and machine learning algorithms. 
-
-In addition, it offers personalized quizzes to assist users in scheduling and maintaining skincare routines tailored to their specific skin type. Whether you are a skincare enthusiast or a beginner, SkinSync aims to empower users to take control of their skincare journey with ease and confidence.
-
-Join us in revolutionizing the way we care for our skin!
-""")
-                .font(.title3)
-                .multilineTextAlignment(.center)
-                .padding()
-
-            Spacer()
+        if let user = users.first {
+            username = user.username
+            age = String(user.age)
+            print("Data loaded: Name: \(username), Age: \(age)")
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(UIColor.systemBackground))
-        .navigationTitle("About Us")
-    }
-}
-
-struct ContactUsView: View {
-    var body: some View {
-        VStack {
-
-            Text("""
-We would love to hear from you!
-
-If you have any questions, feedback, or concerns, feel free to reach out to us via email:
-
-skinskinsyncsync@gmail.com
-
-Follow us on social media to stay updated with our latest features and offers.
-""")
-                .font(.title3)
-                .multilineTextAlignment(.center)
-                .padding()
-
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(UIColor.systemBackground))
-        .navigationTitle("Contact Us")
     }
 }
 

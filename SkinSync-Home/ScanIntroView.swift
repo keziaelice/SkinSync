@@ -18,7 +18,7 @@ struct ScanIntroView: View {
                 Text("Welcome to the Face Analysis")
                     .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundColor(Color(red: 25/255, green: 48/255, blue: 115/255))
+                    .foregroundColor(Color.colorText)
                     .multilineTextAlignment(.center)
                     .padding(.top, 20)
                 
@@ -33,7 +33,7 @@ struct ScanIntroView: View {
                     First, let’s take a front-side picture of yourself. Make sure your face is bare, well-lit, and front-facing for the best results.
                     """)
                     .font(.body)
-                    .foregroundColor(Color(red: 25/255, green: 48/255, blue: 115/255))
+                    .foregroundColor(Color.colorText)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 20)
                 
@@ -45,7 +45,7 @@ struct ScanIntroView: View {
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color(red: 161/255, green: 170/255, blue: 123/255))
+                        .background(Color.backgroundColorElement)
                         .cornerRadius(8)
                         .padding(.horizontal, 40)
                 }

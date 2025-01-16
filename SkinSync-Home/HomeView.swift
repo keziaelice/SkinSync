@@ -31,7 +31,7 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(red: 255/255, green: 250/255, blue: 246/255)
+                Color.backgroundColorPage
                     .ignoresSafeArea()
                 
                 //ScrollView {
@@ -70,14 +70,14 @@ struct HomeView: View {
                                 VStack(alignment: .leading, spacing: 10) {
                                     Text("Good Morning")
                                         .font(.system(size: 24, weight: .bold))
-                                        .foregroundColor(Color.colorText)
+                                        .foregroundColor(Color.colorTextDark)
                                     Text("Don't forget to use sunscreen and re-apply it every 3 hours")
                                         .frame(maxWidth: .infinity, minHeight: 40)
                                         .font(.system(size: 14))
-                                        .foregroundColor(Color.colorText)
+                                        .foregroundColor(Color.colorTextDark)
                                     Text("Start Skincare Routine")
                                         .font(.system(size: 14, weight: .bold))
-                                        .foregroundColor(Color.colorText)
+                                        .foregroundColor(Color.colorTextDark)
                                         .padding(.top, 20)
                                 }
                                 .padding(25)
@@ -103,45 +103,20 @@ struct HomeView: View {
                                 .foregroundColor(Color.colorText)
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 16) {
-                                    ForEach(0..<5, id: \.self) { _ in
-                                        Text("BRANDS")
-                                            .font(.custom("Montserrat-Regular", size: 16))
-                                            .frame(width: 150, height: 150)
-                                            .background(Color.white)
-                                            .foregroundColor(Color.colorText)
-                                            .cornerRadius(10)
-                                            .shadow(radius: 4)
+                                    ForEach(1..<6, id: \.self) { id in
+                                        BrandSquare(brandid: String(id))
+//                                        Text("BRANDS")
+//                                            .font(.custom("Montserrat-Regular", size: 16))
+//                                            .frame(width: 150, height: 150)
+//                                            .background(Color.white)
+//                                            .foregroundColor(Color.colorText)
+//                                            .cornerRadius(10)
+//                                            .shadow(radius: 4)
                                     }
                                 }
                                 .padding()
                             }
                         }
-                        
-                        //                ZStack {
-                        //                    // Product
-                        //                    VStack(alignment: .leading, spacing: 10) {
-                        //                        Text("Product")
-                        //                            .font(.system(size: 20, weight: .bold))
-                        //                            .padding(.leading)
-                        //                            .padding(.bottom, -10)
-                        //                            .foregroundColor(Color.colorText)
-                        //                        ScrollView(.horizontal, showsIndicators: false) {
-                        //                            HStack(spacing: 16) {
-                        //                                ForEach(0..<5, id: \.self) { _ in
-                        //                                    Text("PRODUCT")
-                        //                                        .font(.custom("Montserrat-Regular", size: 16))
-                        //                                        .foregroundColor(Color.colorText)
-                        //                                        .frame(width: 150, height: 150)
-                        //                                        .background(Color.white)
-                        //                                        .cornerRadius(10)
-                        //                                        .shadow(radius: 4)
-                        //                                }
-                        //                            }
-                        //                            .padding()
-                        //                        }
-                        //                    }
-                        //                }
-                        // Product Section
                         VStack(alignment: .leading, spacing: 10) {
                             HStack {
                                 Text("Products")
@@ -171,22 +146,6 @@ struct HomeView: View {
                                 .padding()
                                 .padding(.bottom, 60)
                             }
-//                            ScrollView(.horizontal, showsIndicators: false) {
-//                                HStack(spacing: 16) {
-//                                    ForEach(0..<5, id: \.self) { _ in
-//                                        
-//                                        Text("PRODUCT")
-//                                            .font(.custom("Montserrat-Regular", size: 16))
-//                                            .foregroundColor(Color.colorText)
-//                                            .frame(width: 150, height: 150)
-//                                            .background(Color.white)
-//                                            .cornerRadius(10)
-//                                            .shadow(radius: 4)
-//                                        
-//                                    }
-//                                }
-//                                .padding()
-//                            }
                         }
                     }
                         .padding(.top, -8)
@@ -198,6 +157,29 @@ struct HomeView: View {
             selectRandomProducts() // Select random products when the view appears
         }
 
+    }
+}
+
+struct BrandSquare: View {
+    let brandid: String
+    var body: some View {
+        VStack(alignment: .leading) {
+            // Replace with actual image handling from ProductsData
+            Group {
+                
+                Image("B\(brandid)")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 150)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                
+            }
+            .padding()
+            .background(Color.backgroundColorPage)
+            .cornerRadius(8)
+            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+        }
     }
 }
 
