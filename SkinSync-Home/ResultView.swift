@@ -4,7 +4,7 @@ import SwiftData
 struct ResultView: View {
     let answers: [String: String]
     let selectedImage: UIImage?
-    var isAcneDetect: Bool
+    @Binding var isAcneDetect: Bool
     @State private var filteredProducts: [ProductsData] = []
     @State private var recommendedProducts: [ProductsData] = []
     
@@ -52,7 +52,7 @@ struct ResultView: View {
                     .foregroundColor(Color(red: 25/255, green: 48/255, blue: 115/255))
                 
                 // Display relevant advice based on answers
-                VStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 12) {
                     ForEach(questions) { question in
                         if let answer = answers[question.title], let advice = question.advice?[answer] {
                             Text(advice)
@@ -195,64 +195,4 @@ struct ResultView: View {
 }
 
     
-    //struct ResultView_Previews: PreviewProvider {
-    //    static var previews: some View {
-    //        let sampleAnswers: [String: String] = [
-    //            "skinType": "Oily",
-    //            "primaryConcern": "Acne",
-    //            "allergies": "Fragrance, Parabens",
-    //            "pregnantOrBreastfeeding": "No"
-    //        ]
-    //
-    //        let sampleProducts: [Product] = [
-    //            Product(
-    //                id: "1",
-    //                category: "Cleanser",
-    //                brand: "SkinCare Co.",
-    //                productName: "Gentle Cleanser",
-    //                description: "A mild cleanser perfect for sensitive skin.",
-    //                skinType: ["Dry", "Oily", "Sensitive"],
-    //                ingredients: ["Water", "Glycerin", "Fragrance"],
-    //                productFunction: ["Cleanser", "Hydration"],
-    //                howToUse: ["Apply a small amount to damp skin.", "Rinse thoroughly with water."],
-    //                link: "https://example.com/product1"
-    //            ),
-    //            Product(
-    //                id: "2",
-    //                category: "Treatment",
-    //                brand: "AcneAway",
-    //                productName: "Acne Treatment Gel",
-    //                description: "An effective treatment for reducing acne.",
-    //                skinType: ["Oily", "Combination"],
-    //                ingredients: ["Salicylic Acid", "Niacinamide"],
-    //                productFunction: ["Acne Treatment"],
-    //                howToUse: ["Apply a small amount to damp skin.", "Rinse thoroughly with water."],
-    //                link: "https://example.com/product2"
-    //            )
-    //        ]
-    //
-    //        let sampleQuestions: [Question] = [
-    //            Question(
-    //                id: 1,
-    //                title: "What is your skin type?",
-    //                description: "Choose the option that best describes your skin type.",
-    //                options: ["Dry", "Oily", "Combination", "Sensitive"],
-    //                isCheckbox: false,
-    //                advice: [
-    //                    "Oily": "Use lightweight, oil-free products to minimize shine.",
-    //                    "Dry": "Use hydrating products to maintain moisture.",
-    //                    "Combination": "Balance hydration and oil control for best results.",
-    //                    "Sensitive": "Use gentle, fragrance-free products."
-    //                ]
-    //            )
-    //        ]
-    //
-    //        return ResultView(
-    //            answers: sampleAnswers,
-    //            selectedImage: UIImage(named: "testphoto"), // Replace "sampleImage" with an actual image in your assets
-    //            isAcneDetect: true
-    //        )
-    //    }
-    //}
-    
-
+   

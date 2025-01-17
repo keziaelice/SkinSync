@@ -13,20 +13,22 @@ struct QuestionView: View {
     @State private var currentQuestionIndex = 0
     @State private var navigateToResultView = false
     var selectedImage: UIImage?
-    var isAcneDetect: Bool
+    @Binding var isAcneDetect: Bool
 
     @State private var questions: [Question] = [] // Load questions dynamically
 
-    init(selectedImage: UIImage?, isAcneDetect: Bool) {
-        self.selectedImage = selectedImage
-        self.isAcneDetect = isAcneDetect
-        _questions = State(initialValue: loadQuestions()) // Load questions into state
-    }
+    init(selectedImage: UIImage?, isAcneDetect: Binding<Bool>) {  // Updated initializer
+            self.selectedImage = selectedImage
+            self._isAcneDetect = isAcneDetect  // Proper binding initialization
+            _questions = State(initialValue: loadQuestions())
+        }
 
     var body: some View {
         //NavigationStack {
             let currentQuestion = questions[currentQuestionIndex]
-            
+        ZStack {
+            Color.backgroundColorPage
+                .ignoresSafeArea()
             VStack(alignment: .leading, spacing: 16) {
                 Text(currentQuestion.title)
                     .font(.title)
@@ -84,7 +86,7 @@ struct QuestionView: View {
                 .padding(.top, 30)
                 .disabled(!isNextButtonEnabled())
                 
-                NavigationLink("", destination: ResultView(answers: getAnswers(), selectedImage: selectedImage, isAcneDetect: isAcneDetect), isActive: $navigateToResultView)
+                NavigationLink("", destination: ResultView(answers: getAnswers(), selectedImage: selectedImage, isAcneDetect: $isAcneDetect), isActive: $navigateToResultView)
                     .hidden()
                     .navigationBarBackButtonHidden()
             }
@@ -93,8 +95,8 @@ struct QuestionView: View {
             }
         
             .padding()
-            .background(Color.white)
-        //}
+            .background(Color.backgroundColorPage)
+        }
     }
 
     // Toggle checkbox selection
