@@ -11,7 +11,7 @@ struct PhotoResultView: View {
         VStack {
             Text("Photo Result")
                 .fontWeight(.bold)
-                .foregroundColor(Color(red: 25/255, green: 48/255, blue: 115/255))
+                .foregroundColor(Color.colorText)
                 .padding(.bottom, 20)
                 .font(.system(size: 24))
             
@@ -23,13 +23,9 @@ struct PhotoResultView: View {
                     .cornerRadius(40)
             }
             
-//            Text(acneResults)
-//                .font(.headline)
-//                .padding()
-            
             HStack(spacing: 20) {
                 Button("Retake") {
-                    isCameraPresented = true // Open camera for retake
+                    isCameraPresented = true
                 }
                 .foregroundColor(.black)
                 .padding(.horizontal, 20)
@@ -38,8 +34,7 @@ struct PhotoResultView: View {
                 .cornerRadius(8)
                 
                 Button("Confirm") {
-                    uploadImageToRoboflow(image: selectedImage) // Trigger acne detection
-                    isConfirm = true
+                    uploadImageToRoboflow(image: selectedImage)
                 }
                 .foregroundColor(.white)
                 .padding(.horizontal, 20)
@@ -50,19 +45,15 @@ struct PhotoResultView: View {
             .padding(.top, 20)
             .frame(maxWidth: .infinity, alignment: .center)
             
-            // Navigation to Question
-            NavigationLink("", destination: QuestionView(selectedImage: selectedImage, isAcneDetect: isAcneDetect), isActive: $isConfirm)
+            // Only navigate when we have a result
+            NavigationLink("", destination: QuestionView(selectedImage: selectedImage, isAcneDetect: $isAcneDetect), isActive: $isConfirm)
                 .hidden()
-        }
-        .onAppear {
-            print("isAcneDetect:", isAcneDetect)
         }
         .padding()
         .sheet(isPresented: $isCameraPresented) {
             ImagePickerView(image: $selectedImage, isPresented: $isCameraPresented)
         }
     }
-
     
     func uploadImageToRoboflow(image: UIImage?) {
         guard let image = image, let imageData = image.jpegData(compressionQuality: 0.5) else {
@@ -90,48 +81,43 @@ struct PhotoResultView: View {
                    let predictions = responseDict["predictions"] as? [[String: Any]] {
                     
                     var acneDetected = false
-                    var resultsText = "Detection Results:\n"
                     
                     for prediction in predictions {
                         if let label = prediction["class"] as? String,
                            let confidence = prediction["confidence"] as? Double,
                            label == "Acne" && confidence > 0.5 {
                             acneDetected = true
-                            resultsText += """
-                            Label: \(label)
-                            Confidence: \(String(format: "%.2f", confidence * 100))%
-                            Bounding Box: \(prediction["x"] ?? ""), \(prediction["y"] ?? "")
-                            Width: \(prediction["width"] ?? ""), Height: \(prediction["height"] ?? "")
-                            \n\n
-                            """
-                            
-                            resultsText = "Acne detected."
-                            isAcneDetect = true
-                            
+                            break
                         }
                     }
                     
                     DispatchQueue.main.async {
-                        self.acneResults = acneDetected ? resultsText : "No acne detected."
-                        isAcneDetect = false
+                        self.isAcneDetect = acneDetected
+                        self.acneResults = acneDetected ? "Acne detected." : "No acne detected."
+                        self.isConfirm = true  // Only navigate after we have a result
                     }
+                    
                 } else {
                     DispatchQueue.main.async {
                         self.acneResults = "No predictions found or invalid response."
+                        self.isAcneDetect = false
+                        self.isConfirm = true
                     }
                 }
             } catch {
                 print("Error parsing response: \(error)")
                 DispatchQueue.main.async {
                     self.acneResults = "Error parsing prediction response."
+                    self.isAcneDetect = false
+                    self.isConfirm = true
                 }
             }
         }.resume()
     }
 }
 
-struct PhotoResultView_Previews: PreviewProvider {
-    static var previews: some View {
-        PhotoResultView(selectedImage: .constant(UIImage(named: "testphoto") ?? UIImage()))
-    }
-}
+//struct PhotoResultView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PhotoResultView(selectedImage: .constant(UIImage(named: "testphoto") ?? UIImage()))
+//    }
+//}
